@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tui_clock">%1$02d:%2$02d</string>
+
+    <string name="tui_title">Fragment Time</string>
+    <string name="tui_hint_idle">Tap once to start today\'s English time</string>
+    <string name="tui_section_presets">My scenes</string>
+    <string name="tui_default_preset_name">Quick timer</string>
+    <string name="tui_preset_empty">No scenes yet. Add one to get started</string>
+    <string name="tui_action_add_preset">+ Add scene</string>
+    <string name="tui_action_more">More actions</string>
+    <string name="tui_action_start">Start</string>
+    <string name="tui_action_save">Save</string>
+    <string name="tui_action_cancel">Cancel</string>
+    <string name="tui_action_retry">Retry</string>
+    <string name="tui_action_got_it">Got it</string>
+    <string name="tui_action_again">Another round</string>
+    <string name="tui_action_edit">Edit</string>
+    <string name="tui_action_delete">Delete</string>
+
+    <string name="tui_preset_new_title">New scene</string>
+    <string name="tui_preset_edit_title">Edit scene</string>
+    <string name="tui_field_name">Scene name</string>
+    <string name="tui_field_name_hint">e.g. Brushing teeth</string>
+    <string name="tui_field_minutes">Minutes</string>
+    <string name="tui_field_seconds">Seconds</string>
+    <string name="tui_preset_invalid_name">Give this scene a name first</string>
+    <string name="tui_preset_invalid_duration">Duration must be between 5 seconds and 60 minutes</string>
+
+    <string name="tui_delete_preset_title">Delete this scene?</string>
+    <string name="tui_delete_preset_message">Deleting \"%1$s\" can\'t be undone. Saved course progress is kept.</string>
+
+    <string name="tui_current_course">Current course</string>
+    <string name="tui_checkpoint_percent">At %1$d%%</string>
+    <string name="tui_action_continue_last">Continue from last position</string>
+    <string name="tui_action_start_first">Start from the beginning</string>
+    <string name="tui_no_course">No courses imported yet</string>
+    <string name="tui_no_course_hint">Once imported, starting a timer plays them automatically.</string>
+    <string name="tui_action_go_import">Go to Courses</string>
+    <string name="tui_action_countdown_only">Timer only</string>
+    <string name="tui_no_course_playing">No course linked</string>
+
+    <string name="tui_error_start_title">Couldn\'t start playback</string>
+    <string name="tui_error_start_hint">Retry, or use Timer only to log this round first.</string>
+    <string name="tui_preparing">Preparing playback…</string>
+
+    <string name="tui_label_countdown_only">Timer only</string>
+    <string name="tui_action_pause_timer">Pause timer</string>
+    <string name="tui_action_resume_timer">Resume timer</string>
+    <string name="tui_action_finish_early">End early</string>
+    <string name="tui_finish_history_title">Save to history?</string>
+    <string name="tui_action_keep_history">Save</string>
+    <string name="tui_action_discard_history">Don\'t save</string>
+
+    <string name="tui_label_media">Playback</string>
+    <string name="tui_media_play">Play</string>
+    <string name="tui_media_pause">Pause playback</string>
+    <string name="tui_media_previous">Previous</string>
+    <string name="tui_media_next">Next</string>
+    <string name="tui_label_speed">Speed</string>
+    <string name="tui_speed_value">%1$s×</string>
+    <string name="tui_pause_playback_note">Pausing playback does not pause the timer.</string>
+    <string name="tui_action_show_video">Show video</string>
+    <string name="tui_action_hide_video">Hide video</string>
+    <string name="tui_video_waiting">Connecting player…</string>
+    <string name="tui_playback_error_inline">Playback hit a problem. Try another course.</string>
+    <string name="tui_no_audio_notice">This video has no sound track, so you won\'t hear it with the screen locked. Try another course.</string>
+
+    <string name="tui_finished_title">Timer finished</string>
+    <string name="tui_finished_minutes">%1$d min this round</string>
+    <string name="tui_result_completed">Completed on time. Course progress saved</string>
+    <string name="tui_result_early">Ended early. Actual time saved</string>
+
+    <string name="tui_interrupted_title">Last session was interrupted</string>
+</resources>

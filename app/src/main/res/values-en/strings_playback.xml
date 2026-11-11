@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_channel_name">Media playback</string>
+
+    <string name="playback_error_not_ready">The player is not ready yet, please try again</string>
+    <string name="playback_error_unplayable">This file cannot be played. Choose another course or relink it</string>
+    <string name="playback_error_missing">This course file cannot be found. Relink the course folder</string>
+    <string name="playback_error_timeout">Playback did not really start. Try again or choose another course</string>
+    <string name="playback_no_course">There is no course playing</string>
+    <string name="playback_unsupported_note">Playback failed: the format cannot be decoded. Choose another course or relink the file</string>
+</resources>

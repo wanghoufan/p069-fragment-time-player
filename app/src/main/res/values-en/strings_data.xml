@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="data_scan_in_progress">Scanning the course folder, please wait</string>
+    <string name="data_err_no_folder">No course folder imported yet. Please choose a folder first</string>
+    <string name="data_err_folder_unreadable">This folder cannot be read. Please choose it again</string>
+    <string name="data_err_no_media">No playable course files were found in this folder</string>
+    <string name="data_err_scan_failed">Something went wrong while scanning. Please try again later</string>
+    <string name="data_note_missing">This file was not found in the course folder</string>
+    <string name="data_import_added_updated">Import finished: %1$d added, %2$d updated</string>
+    <string name="data_import_missing_part">, %1$d files not found</string>
+    <string name="data_import_unsupported_part">, %1$d files cannot be played</string>
+    <string name="data_import_duplicate_part">, duplicate file skipped: %1$d</string>
+    <string name="data_import_permission_part">; folder access could not be kept, you may need to choose it again after restart</string>
+    <string name="data_import_partial_part">; some folders could not be read, missing status was not updated this time</string>
+    <string name="data_probe_no_track">This file has no playable audio or video track</string>
+    <string name="data_probe_audio_silent">This audio file has no sound track</string>
+    <string name="data_probe_video_no_audio">This video has no sound track, only the picture can be shown</string>
+    <string name="data_probe_no_permission">No permission to read this file. Please choose the course folder again</string>
+    <string name="data_probe_unreadable">This file cannot be read, the format may not be supported</string>
+    <string name="data_backup_unreadable">The backup file cannot be read</string>
+    <string name="data_backup_write_failed">The backup file cannot be written. Please choose another location</string>
+    <string name="data_backup_failed">The backup operation failed. Please try again later</string>
+    <string name="data_restore_snapshot_failed">The safety backup could not be written, so this restore was cancelled</string>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mcu_course_count">%1$d lessons</string>
+    <string name="mcu_folder_none">No folder selected</string>
+    <string name="mcu_folder_current">Folder: %1$s</string>
+    <string name="mcu_folder_selected">Folder selected</string>
+
+    <string name="mcu_action_pick_folder">Choose course folder</string>
+    <string name="mcu_action_rescan">Update course list</string>
+    <string name="mcu_action_relink">Relink folder</string>
+    <string name="mcu_action_relink_short">Relink</string>
+    <string name="mcu_action_more">More actions</string>
+    <string name="mcu_action_play_from_start">Play from start</string>
+    <string name="mcu_action_set_start">Set start point</string>
+    <string name="mcu_action_view_reason">See why</string>
+
+    <string name="mcu_scanning">Updating course list…</string>
+    <string name="mcu_scan_progress">Scanned %1$d/%2$d · %3$s</string>
+    <string name="mcu_scan_progress_no_name">Scanned %1$d/%2$d</string>
+    <string name="mcu_scan_busy">The course list is updating, please wait</string>
+    <string name="mcu_scan_done">Course list updated, %1$d lessons</string>
+    <string name="mcu_scan_failed">Could not update the course list, please try again</string>
+
+    <string name="mcu_status_missing">File missing</string>
+    <string name="mcu_status_unsupported">Unsupported format</string>
+    <string name="mcu_checkpoint_percent">%1$d%% learned</string>
+    <string name="mcu_duration_unknown">Length unknown</string>
+
+    <string name="mcu_empty_title">No courses yet</string>
+    <string name="mcu_empty_hint">Pick a folder with audio or video files and the courses will show up here.</string>
+    <string name="mcu_empty_action">Choose course folder</string>
+
+    <string name="mcu_start_point_title">Set start point</string>
+    <string name="mcu_start_point_value">%1$s / %2$s</string>
+    <string name="mcu_start_point_hint">This lesson will start from here the next time you tap it.</string>
+    <string name="mcu_start_point_saved">Start point saved</string>
+
+    <string name="mcu_reason_title">About this lesson</string>
+    <string name="mcu_reason_missing_hint">Relink the original folder, or put the file back and update the list.</string>
+    <string name="mcu_reason_unsupported_hint">Try another file, or relink the folder and try again.</string>
+    <string name="mcu_reason_unknown">This lesson cannot play right now. Relink the folder or choose another file.</string>
+
+    <string name="mcu_status_no_audio">No audio</string>
+    <string name="mcu_no_audio_notice">This video has no sound track, so you won\'t hear it with the screen locked. Try another course.</string>
+    <string name="mcu_reason_no_audio_hint">This video has no sound track. Try another course.</string>
+
+    <string name="mcu_play_failed">This lesson cannot play right now. Try another course</string>
+</resources>

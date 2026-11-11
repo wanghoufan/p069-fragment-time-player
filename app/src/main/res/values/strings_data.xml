@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="data_scan_in_progress">正在扫描课程目录，请稍候</string>
+    <string name="data_err_no_folder">还没有导入过课程，请先选择课程文件夹</string>
+    <string name="data_err_folder_unreadable">无法读取这个文件夹，请重新选择</string>
+    <string name="data_err_no_media">这个文件夹里没有找到能播放的课程文件</string>
+    <string name="data_err_scan_failed">扫描课程目录时出错了，请稍后再试</string>
+    <string name="data_note_missing">没有在课程目录中找到这个文件</string>
+    <string name="data_import_added_updated">导入完成：新增 %1$d 节，更新 %2$d 节</string>
+    <string name="data_import_missing_part">，%1$d 节找不到文件</string>
+    <string name="data_import_unsupported_part">，%1$d 个文件无法播放</string>
+    <string name="data_import_duplicate_part">，重复文件，已跳过 %1$d 个</string>
+    <string name="data_import_permission_part">；文件夹授权无法长期保存，重启后可能需要重新选择</string>
+    <string name="data_import_partial_part">；部分目录未读取，本次未更新缺失状态</string>
+    <string name="data_probe_no_track">这个文件里没有可播放的音视频轨道</string>
+    <string name="data_probe_audio_silent">这个音频文件没有声音轨道</string>
+    <string name="data_probe_video_no_audio">这个视频没有声音轨道，只能看画面</string>
+    <string name="data_probe_no_permission">没有读取这个文件的权限，请重新选择课程文件夹</string>
+    <string name="data_probe_unreadable">无法读取这个文件，格式可能不支持</string>
+    <string name="data_backup_unreadable">备份文件无法读取</string>
+    <string name="data_backup_write_failed">无法写入备份文件，请换一个保存位置</string>
+    <string name="data_backup_failed">备份操作失败，请稍后再试</string>
+    <string name="data_restore_snapshot_failed">恢复前的保护备份没有写成功，本次恢复已取消</string>
+</resources>

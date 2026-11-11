@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timer_channel_running_name">Timer running</string>
+    <string name="timer_channel_running_description">Shows the countdown in the notification shade, silently</string>
+    <string name="timer_channel_alert_name">End-of-timer alert</string>
+    <string name="timer_channel_alert_description">Alerts once at the end of the countdown with alarm volume; visible on the lock screen</string>
+
+    <string name="timer_running_text">Counting down; you will be alerted once at the end</string>
+    <string name="timer_alert_title">Time is up</string>
+    <string name="timer_alert_text">“%1$s” reached %2$s</string>
+    <string name="timer_alert_processing_text">Saving your progress and finishing this timer</string>
+
+    <string name="timer_error_no_courses">No courses imported yet. You can use the countdown only</string>
+    <string name="timer_error_playback_failed">Playback did not really start. Choose another course or use the countdown only</string>
+
+    <string name="timer_interrupted_notice">The previous timer was interrupted by the system; %1$s had been counted</string>
+    <string name="timer_interrupted_boot">The phone restarted, so the previous timer was interrupted; %1$s had been counted</string>
+    <string name="timer_interrupted_preparing">The previous timer was interrupted while preparing; no time was counted</string>
+</resources>

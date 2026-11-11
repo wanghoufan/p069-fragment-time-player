@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tui_clock">%1$02d:%2$02d</string>
+
+    <string name="tui_title">碎片时间</string>
+    <string name="tui_hint_idle">点一下，开始今天的英语时间</string>
+    <string name="tui_section_presets">我的场景</string>
+    <string name="tui_default_preset_name">快速计时</string>
+    <string name="tui_preset_empty">还没有场景，先新增一个吧</string>
+    <string name="tui_action_add_preset">+ 新增场景</string>
+    <string name="tui_action_more">更多操作</string>
+    <string name="tui_action_start">开始</string>
+    <string name="tui_action_save">保存</string>
+    <string name="tui_action_cancel">取消</string>
+    <string name="tui_action_retry">重试</string>
+    <string name="tui_action_got_it">知道了</string>
+    <string name="tui_action_again">再来一轮</string>
+    <string name="tui_action_edit">编辑</string>
+    <string name="tui_action_delete">删除</string>
+
+    <string name="tui_preset_new_title">新增场景</string>
+    <string name="tui_preset_edit_title">编辑场景</string>
+    <string name="tui_field_name">场景名称</string>
+    <string name="tui_field_name_hint">例如 刷牙、滴眼药水</string>
+    <string name="tui_field_minutes">分钟</string>
+    <string name="tui_field_seconds">秒</string>
+    <string name="tui_preset_invalid_name">请先给这个场景起个名字</string>
+    <string name="tui_preset_invalid_duration">时长需要在 5 秒到 60 分钟之间</string>
+
+    <string name="tui_delete_preset_title">删除这个场景？</string>
+    <string name="tui_delete_preset_message">删除「%1$s」后无法恢复，已记录的学习进度不受影响。</string>
+
+    <string name="tui_current_course">当前课程</string>
+    <string name="tui_checkpoint_percent">已学到 %1$d%%</string>
+    <string name="tui_action_continue_last">从上次位置继续</string>
+    <string name="tui_action_start_first">从头开始</string>
+    <string name="tui_no_course">还没有导入课程</string>
+    <string name="tui_no_course_hint">导入课程后，开始计时就会自动接着播放。</string>
+    <string name="tui_action_go_import">去课程页导入</string>
+    <string name="tui_action_countdown_only">仅倒计时</string>
+    <string name="tui_no_course_playing">未关联课程</string>
+
+    <string name="tui_error_start_title">这次没能开始播放</string>
+    <string name="tui_error_start_hint">可以重试，或者先用仅倒计时把这一轮时间记下来。</string>
+    <string name="tui_preparing">正在准备播放…</string>
+
+    <string name="tui_label_countdown_only">仅倒计时</string>
+    <string name="tui_action_pause_timer">暂停计时</string>
+    <string name="tui_action_resume_timer">继续计时</string>
+    <string name="tui_action_finish_early">提前结束</string>
+    <string name="tui_finish_history_title">记入历史？</string>
+    <string name="tui_action_keep_history">记入</string>
+    <string name="tui_action_discard_history">不记入</string>
+
+    <string name="tui_label_media">播放控制</string>
+    <string name="tui_media_play">播放</string>
+    <string name="tui_media_pause">暂停播放</string>
+    <string name="tui_media_previous">上一课</string>
+    <string name="tui_media_next">下一课</string>
+    <string name="tui_label_speed">倍速</string>
+    <string name="tui_speed_value">%1$s×</string>
+    <string name="tui_pause_playback_note">暂停播放不会停倒计时。</string>
+    <string name="tui_action_show_video">展开画面</string>
+    <string name="tui_action_hide_video">收起画面</string>
+    <string name="tui_video_waiting">正在连接播放器…</string>
+    <string name="tui_playback_error_inline">播放出错了，可以换个课程试试。</string>
+    <string name="tui_no_audio_notice">这个视频没有音轨，锁屏后听不到声音。可以换一条课程。</string>
+
+    <string name="tui_finished_title">计时完成</string>
+    <string name="tui_finished_minutes">本次 %1$d 分钟</string>
+    <string name="tui_result_completed">到点完成，课程进度已保存</string>
+    <string name="tui_result_early">提前结束，已按实际用时保存</string>
+
+    <string name="tui_interrupted_title">上次计时被中断</string>
+</resources>

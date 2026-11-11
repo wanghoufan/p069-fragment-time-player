@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="seu_section_playback">Playback and alerts</string>
+    <string name="seu_label_vibration">Vibrate at the end</string>
+    <string name="seu_label_alert_sound">Alert sound at the end</string>
+    <string name="seu_action_test_vibration">Test vibration</string>
+    <string name="seu_action_test_sound">Test alert sound</string>
+    <string name="seu_test_vibration_unavailable">This device has no vibration available</string>
+    <string name="seu_test_sound_unavailable">This device has no alert sound available</string>
+    <string name="seu_test_sound_failed">The sound did not play. Check the system volume</string>
+
+    <string name="seu_section_permissions">System permissions</string>
+    <string name="seu_label_notification">End-of-timer notification</string>
+    <string name="seu_notification_on">On</string>
+    <string name="seu_notification_off">Off</string>
+    <string name="seu_notification_hint">With notifications off you may not see the alert. You can turn it on in system settings.</string>
+    <string name="seu_action_open_notification">Turn on</string>
+    <string name="seu_label_exact_alarm">On-time alerts</string>
+    <string name="seu_exact_alarm_on">Allowed</string>
+    <string name="seu_exact_alarm_off">Not allowed</string>
+    <string name="seu_exact_alarm_hint">Without this permission the alert may arrive a few seconds to minutes late.</string>
+    <string name="seu_action_open_exact_alarm">Allow</string>
+    <string name="seu_exact_alarm_unavailable">This system cannot open that page directly. Please allow it in system settings.</string>
+    <string name="seu_exact_alarm_degraded">Could not open the permission page. Alerts will run as normal alarms and may be slightly late.</string>
+
+    <string name="seu_section_courses">Course source</string>
+    <string name="seu_label_folder">Current folder</string>
+    <string name="seu_folder_none">No folder selected</string>
+    <string name="seu_course_count">%1$d lessons now</string>
+    <string name="seu_action_pick_folder">Choose folder</string>
+    <string name="seu_action_rescan">Update course list</string>
+    <string name="seu_action_relink">Relink</string>
+
+    <string name="seu_section_appearance">Appearance</string>
+    <string name="seu_label_theme">Theme</string>
+    <string name="seu_theme_system">Follow system</string>
+    <string name="seu_theme_light">Light</string>
+    <string name="seu_theme_dark">Dark</string>
+    <string name="seu_label_font_scale">Font size</string>
+    <string name="seu_font_small">Small</string>
+    <string name="seu_font_standard">Standard</string>
+    <string name="seu_font_large">Large</string>
+    <string name="seu_font_xlarge">Extra large</string>
+
+    <string name="seu_section_language">Language</string>
+    <string name="seu_language_system">Follow system</string>
+    <string name="seu_language_zh_cn">简体中文</string>
+    <string name="seu_language_en">English</string>
+
+    <string name="seu_section_backup">Backup and restore</string>
+    <string name="seu_backup_hint">A backup keeps scenes, the course list and progress. Audio and video files are not included.</string>
+    <string name="seu_action_export">Export backup</string>
+    <string name="seu_action_import">Import backup</string>
+    <string name="seu_backup_exported">Backup saved</string>
+    <string name="seu_backup_imported">Restore complete</string>
+    <string name="seu_backup_failed">The backup action did not finish. Please try again</string>
+    <string name="seu_backup_unreadable">This backup file cannot be read. Choose another file</string>
+    <string name="seu_import_confirm_title">Restore this backup?</string>
+    <string name="seu_import_confirm_message">The backup has %1$d scenes and %2$d lessons. Restoring replaces the current scenes, courses and progress.</string>
+    <string name="seu_import_confirm_action">Restore</string>
+
+    <string name="seu_section_about">About</string>
+    <string name="seu_version">Version %1$s</string>
+    <string name="seu_about_offline">Fully offline. No network or account needed.</string>
+</resources>

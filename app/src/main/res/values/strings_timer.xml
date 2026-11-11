@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timer_channel_running_name">计时进行中</string>
+    <string name="timer_channel_running_description">在通知栏显示正在进行的倒计时，不发声</string>
+    <string name="timer_channel_alert_name">到点提醒</string>
+    <string name="timer_channel_alert_description">倒计时结束时用闹钟音量提醒一次，锁屏也会显示</string>
+
+    <string name="timer_running_text">倒计时中，到点会提醒一次</string>
+    <string name="timer_alert_title">时间到了</string>
+    <string name="timer_alert_text">「%1$s」%2$s 已到</string>
+    <string name="timer_alert_processing_text">正在保存进度并结束本次计时</string>
+
+    <string name="timer_error_no_courses">还没有导入课程，可以先只用倒计时</string>
+    <string name="timer_error_playback_failed">播放没有真正开始，请换课程或只用倒计时</string>
+
+    <string name="timer_interrupted_notice">上次计时被系统中断，中断前已进行 %1$s</string>
+    <string name="timer_interrupted_boot">手机重启，上次计时已中断，中断前已进行 %1$s</string>
+    <string name="timer_interrupted_preparing">上次计时在准备阶段被中断，未开始计时</string>
+</resources>

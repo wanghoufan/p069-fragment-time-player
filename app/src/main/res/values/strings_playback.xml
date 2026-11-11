@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_channel_name">媒体播放</string>
+
+    <string name="playback_error_not_ready">播放器还没有准备好，请重试</string>
+    <string name="playback_error_unplayable">这个文件无法播放，请换课程或重新关联</string>
+    <string name="playback_error_missing">找不到这个课程文件，请重新关联课程目录</string>
+    <string name="playback_error_timeout">播放没有真正开始，请重试或换课程</string>
+    <string name="playback_no_course">没有正在播放的课程</string>
+    <string name="playback_unsupported_note">播放失败：当前格式无法解码，请换课程或重新关联文件</string>
+</resources>

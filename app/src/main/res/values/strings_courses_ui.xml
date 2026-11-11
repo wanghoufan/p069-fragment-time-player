@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mcu_course_count">共 %1$d 节</string>
+    <string name="mcu_folder_none">还没有选择文件夹</string>
+    <string name="mcu_folder_current">当前文件夹：%1$s</string>
+    <string name="mcu_folder_selected">已选择文件夹</string>
+
+    <string name="mcu_action_pick_folder">选择课程文件夹</string>
+    <string name="mcu_action_rescan">更新课程目录</string>
+    <string name="mcu_action_relink">重新关联文件夹</string>
+    <string name="mcu_action_relink_short">重新关联</string>
+    <string name="mcu_action_more">更多操作</string>
+    <string name="mcu_action_play_from_start">从头开始</string>
+    <string name="mcu_action_set_start">设置起播点</string>
+    <string name="mcu_action_view_reason">查看原因</string>
+
+    <string name="mcu_scanning">正在更新课程目录…</string>
+    <string name="mcu_scan_progress">已扫描 %1$d/%2$d · %3$s</string>
+    <string name="mcu_scan_progress_no_name">已扫描 %1$d/%2$d</string>
+    <string name="mcu_scan_busy">正在更新课程目录，请稍候</string>
+    <string name="mcu_scan_done">课程目录已更新，共 %1$d 节</string>
+    <string name="mcu_scan_failed">更新课程目录时出错了，请稍后再试</string>
+
+    <string name="mcu_status_missing">媒体缺失</string>
+    <string name="mcu_status_unsupported">格式不支持</string>
+    <string name="mcu_checkpoint_percent">已学到 %1$d%%</string>
+    <string name="mcu_duration_unknown">时长未知</string>
+
+    <string name="mcu_empty_title">还没有课程</string>
+    <string name="mcu_empty_hint">选择一个放着音频或视频的文件夹，课程会自动列出来。</string>
+    <string name="mcu_empty_action">选择课程文件夹</string>
+
+    <string name="mcu_start_point_title">设置起播点</string>
+    <string name="mcu_start_point_value">%1$s / %2$s</string>
+    <string name="mcu_start_point_hint">下次点这一节时，会从这个位置开始播放。</string>
+    <string name="mcu_start_point_saved">起播点已保存</string>
+
+    <string name="mcu_reason_title">这一节的情况</string>
+    <string name="mcu_reason_missing_hint">可以重新关联原来的文件夹，或者把文件放回原处后再更新目录。</string>
+    <string name="mcu_reason_unsupported_hint">可以换一个能播放的文件，或重新关联文件夹后再试。</string>
+    <string name="mcu_reason_unknown">这一节暂时无法播放，可以重新关联文件夹或换一个文件。</string>
+
+    <string name="mcu_status_no_audio">无音轨</string>
+    <string name="mcu_no_audio_notice">这个视频没有音轨，锁屏后听不到声音。可以换一条课程。</string>
+    <string name="mcu_reason_no_audio_hint">这个视频没有音轨，可以换一条课程。</string>
+
+    <string name="mcu_play_failed">这一节暂时无法播放，可以试试其他课程</string>
+</resources>

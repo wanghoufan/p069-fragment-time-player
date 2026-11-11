@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="seu_section_playback">播放与提醒</string>
+    <string name="seu_label_vibration">到点震动</string>
+    <string name="seu_label_alert_sound">到点响铃</string>
+    <string name="seu_action_test_vibration">测试震动</string>
+    <string name="seu_action_test_sound">试听铃声</string>
+    <string name="seu_test_vibration_unavailable">这个设备没有可用的震动</string>
+    <string name="seu_test_sound_unavailable">这个设备暂时没有可用的提醒铃声</string>
+    <string name="seu_test_sound_failed">铃声没能播放，可以先检查一下系统音量</string>
+
+    <string name="seu_section_permissions">系统权限</string>
+    <string name="seu_label_notification">到点通知</string>
+    <string name="seu_notification_on">已开启</string>
+    <string name="seu_notification_off">未开启</string>
+    <string name="seu_notification_hint">通知被关掉后，到点提醒可能看不到。可以到系统设置里打开。</string>
+    <string name="seu_action_open_notification">去开启</string>
+    <string name="seu_label_exact_alarm">准时提醒</string>
+    <string name="seu_exact_alarm_on">已允许</string>
+    <string name="seu_exact_alarm_off">未允许</string>
+    <string name="seu_exact_alarm_hint">没有这项权限时，提醒可能会晚几秒到几分钟。</string>
+    <string name="seu_action_open_exact_alarm">去授权</string>
+    <string name="seu_exact_alarm_unavailable">当前系统不支持直接打开授权页，可以到系统设置里手动允许。</string>
+    <string name="seu_exact_alarm_degraded">没能打开授权页，提醒会按普通闹钟执行，时间可能稍有延迟。</string>
+
+    <string name="seu_section_courses">课程来源</string>
+    <string name="seu_label_folder">当前文件夹</string>
+    <string name="seu_folder_none">还没有选择文件夹</string>
+    <string name="seu_course_count">当前共 %1$d 节</string>
+    <string name="seu_action_pick_folder">选择文件夹</string>
+    <string name="seu_action_rescan">更新课程目录</string>
+    <string name="seu_action_relink">重新关联</string>
+
+    <string name="seu_section_appearance">外观</string>
+    <string name="seu_label_theme">主题</string>
+    <string name="seu_theme_system">跟随系统</string>
+    <string name="seu_theme_light">浅色</string>
+    <string name="seu_theme_dark">深色</string>
+    <string name="seu_label_font_scale">字体大小</string>
+    <string name="seu_font_small">小</string>
+    <string name="seu_font_standard">标准</string>
+    <string name="seu_font_large">大</string>
+    <string name="seu_font_xlarge">特大</string>
+
+    <string name="seu_section_language">语言</string>
+    <string name="seu_language_system">跟随系统</string>
+    <string name="seu_language_zh_cn">简体中文</string>
+    <string name="seu_language_en">English</string>
+
+    <string name="seu_section_backup">备份与恢复</string>
+    <string name="seu_backup_hint">备份只保存场景、课程清单和进度，不包含音频视频文件。</string>
+    <string name="seu_action_export">导出备份</string>
+    <string name="seu_action_import">导入备份</string>
+    <string name="seu_backup_exported">备份已保存</string>
+    <string name="seu_backup_imported">恢复完成</string>
+    <string name="seu_backup_failed">备份操作没有完成，请稍后再试</string>
+    <string name="seu_backup_unreadable">这个备份文件读不出来，请换一个文件</string>
+    <string name="seu_import_confirm_title">恢复这个备份？</string>
+    <string name="seu_import_confirm_message">备份里有场景 %1$d 个、课程 %2$d 个。恢复会覆盖当前的场景、课程和进度。</string>
+    <string name="seu_import_confirm_action">恢复</string>
+
+    <string name="seu_section_about">关于</string>
+    <string name="seu_version">版本 %1$s</string>
+    <string name="seu_about_offline">完全离线，不需要网络或账号。</string>
+</resources>
