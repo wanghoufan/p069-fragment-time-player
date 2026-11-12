@@ -9,6 +9,10 @@
     <string name="seu_test_sound_unavailable">这个设备暂时没有可用的提醒铃声</string>
     <string name="seu_test_sound_failed">铃声没能播放，可以先检查一下系统音量</string>
 
+    <string name="seu_section_time_flow">时光流速（测试用）</string>
+    <string name="seu_time_flow_option">%1$d×</string>
+    <string name="seu_time_flow_hint">仅影响计时速度，不改变音频播放速度。非 1× 时本轮不记入历史与进度。</string>
+
     <string name="seu_section_permissions">系统权限</string>
     <string name="seu_label_notification">到点通知</string>
     <string name="seu_notification_on">已开启</string>

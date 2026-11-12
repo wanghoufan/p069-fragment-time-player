@@ -62,6 +62,7 @@ import com.wanghoufan.fragmentplayer.core.model.PlaybackUiState
 import com.wanghoufan.fragmentplayer.core.model.Preset
 import com.wanghoufan.fragmentplayer.core.model.TimerPhase
 import com.wanghoufan.fragmentplayer.core.model.TimerUiState
+import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
 import com.wanghoufan.fragmentplayer.ui.MainViewModel
 import com.wanghoufan.fragmentplayer.ui.components.CoursePlayerView
 import com.wanghoufan.fragmentplayer.ui.components.DeletePresetDialog
@@ -580,9 +581,11 @@ private fun ActiveSection(
     onNext: () -> Unit,
     onSpeed: (Float) -> Unit
 ) {
-    val remainingSec = (timer.remainingMs + 999L) / 1000L
     val targetMs = (timer.targetSec * 1000L).coerceAtLeast(1L)
-    val fraction = (timer.remainingMs.toFloat() / targetMs.toFloat()).coerceIn(0f, 1f)
+    // 引擎里是压缩后的墙钟剩余；界面按本轮倍率换回目标时长显示，与到点时刻同步。
+    val displayRemainingMs = TimeFlowMath.displayRemainingMs(targetMs, timer.remainingMs, timer.timeFlow)
+    val remainingSec = (displayRemainingMs + 999L) / 1000L
+    val fraction = (displayRemainingMs.toFloat() / targetMs.toFloat()).coerceIn(0f, 1f)
     val isRunning = timer.phase == TimerPhase.RUNNING
 
     Column(

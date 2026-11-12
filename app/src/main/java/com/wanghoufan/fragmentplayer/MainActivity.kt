@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.wanghoufan.fragmentplayer.timer.TimerAlertSound
 import com.wanghoufan.fragmentplayer.ui.FragmentTimeRoot
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +48,12 @@ class MainActivity : AppCompatActivity() {
             BackHandler { exitBackGuard.onBackPressed() }
             FragmentTimeRoot()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 用户回到应用（含点通知进入）即认为已经收到提醒，停掉最长 15 秒的到点铃声。
+        TimerAlertSound.stop()
     }
 
     private fun requestPlaybackNotificationPermission() {

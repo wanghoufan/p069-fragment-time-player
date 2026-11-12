@@ -8,12 +8,14 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.LanguageMode
 import com.wanghoufan.fragmentplayer.core.model.ThemeMode
 import com.wanghoufan.fragmentplayer.core.repo.SettingsRepository
+import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -45,6 +47,8 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
 
     override suspend fun setAlertSound(enabled: Boolean) = write { it[KEY_ALERT_SOUND] = enabled }
 
+    override suspend fun setTimeFlow(multiplier: Int) = write { it[KEY_TIME_FLOW] = multiplier }
+
     override suspend fun setFolderUri(uri: String?) = write {
         if (uri.isNullOrBlank()) it.remove(KEY_FOLDER_URI) else it[KEY_FOLDER_URI] = uri
     }
@@ -66,7 +70,8 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
         }.getOrDefault(LanguageMode.FOLLOW_SYSTEM),
         fontScale = this[KEY_FONT_SCALE] ?: DEFAULT_FONT_SCALE,
         vibration = this[KEY_VIBRATION] ?: true,
-        alertSound = this[KEY_ALERT_SOUND] ?: true
+        alertSound = this[KEY_ALERT_SOUND] ?: true,
+        timeFlow = TimeFlowMath.sanitize(this[KEY_TIME_FLOW] ?: TimeFlowMath.NORMAL)
     )
 
     private fun String?.orNullIfBlank(): String? = this?.takeIf { it.isNotBlank() }
@@ -79,6 +84,7 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
         val KEY_FONT_SCALE = floatPreferencesKey("font_scale")
         val KEY_VIBRATION = booleanPreferencesKey("vibration")
         val KEY_ALERT_SOUND = booleanPreferencesKey("alert_sound")
+        val KEY_TIME_FLOW = intPreferencesKey("time_flow")
         val KEY_FOLDER_URI = stringPreferencesKey("folder_uri")
     }
 }

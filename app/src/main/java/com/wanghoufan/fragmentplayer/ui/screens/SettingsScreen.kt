@@ -67,6 +67,7 @@ import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.LanguageMode
 import com.wanghoufan.fragmentplayer.core.model.ThemeMode
 import com.wanghoufan.fragmentplayer.core.repo.BackupSummary
+import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
 import com.wanghoufan.fragmentplayer.ui.components.ChoiceRow
 import com.wanghoufan.fragmentplayer.ui.components.SectionCard
 import com.wanghoufan.fragmentplayer.ui.components.SettingRow
@@ -268,6 +269,10 @@ fun SettingsScreen() {
                 onTestVibration = { testVibration() },
                 onTestSound = { testAlertSound() }
             )
+            TimeFlowSection(
+                timeFlow = settings.timeFlow,
+                onTimeFlowChange = viewModel::setTimeFlow
+            )
             PermissionsSection(
                 notificationGranted = notificationGranted,
                 exactAlarmAllowed = exactAlarmAllowed,
@@ -391,6 +396,24 @@ private fun PlaybackAlertSection(
                 Text(stringResource(R.string.seu_action_test_sound))
             }
         }
+    }
+}
+
+@Composable
+private fun TimeFlowSection(
+    timeFlow: Int,
+    onTimeFlowChange: (Int) -> Unit
+) {
+    val current = TimeFlowMath.sanitize(timeFlow)
+    SectionCard(title = stringResource(R.string.seu_section_time_flow)) {
+        TimeFlowMath.OPTIONS.forEach { option ->
+            ChoiceRow(
+                label = stringResource(R.string.seu_time_flow_option, option),
+                selected = current == option,
+                onClick = { onTimeFlowChange(option) }
+            )
+        }
+        HintText(stringResource(R.string.seu_time_flow_hint))
     }
 }
 

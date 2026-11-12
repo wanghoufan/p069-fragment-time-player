@@ -9,6 +9,10 @@
     <string name="seu_test_sound_unavailable">This device has no alert sound available</string>
     <string name="seu_test_sound_failed">The sound did not play. Check the system volume</string>
 
+    <string name="seu_section_time_flow">Time flow (testing)</string>
+    <string name="seu_time_flow_option">%1$d×</string>
+    <string name="seu_time_flow_hint">Affects timer speed only, not audio playback speed. Non-1× rounds are not recorded in history or progress.</string>
+
     <string name="seu_section_permissions">System permissions</string>
     <string name="seu_label_notification">End-of-timer notification</string>
     <string name="seu_notification_on">On</string>

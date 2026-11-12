@@ -51,6 +51,7 @@ interface SettingsRepository {
     suspend fun setFontScale(scale: Float)
     suspend fun setVibration(enabled: Boolean)
     suspend fun setAlertSound(enabled: Boolean)
+    suspend fun setTimeFlow(multiplier: Int)
     suspend fun setFolderUri(uri: String?)
     suspend fun currentFolderUri(): String?
 }

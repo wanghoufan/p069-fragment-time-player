@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.wanghoufan.fragmentplayer.R
 import com.wanghoufan.fragmentplayer.core.model.TimerPhase
+import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
 
 /**
  * 重启后不假装计时仍在继续：取消遗留闹钟、清掉会话，并把真实经过时间写成中断提示。
@@ -24,7 +25,12 @@ class BootReceiver : BroadcastReceiver() {
                         } else {
                             (snapshot.deadlineWall - System.currentTimeMillis()).coerceAtLeast(0L)
                         }
-                        val elapsedSec = ((snapshot.targetSec * 1000L - remaining).coerceAtLeast(0L) / 1000L)
+                        // 会话里存的是压缩后的墙钟剩余，提示仍按目标时长口径说明。
+                        val elapsedSec = TimeFlowMath.virtualElapsedMs(
+                            snapshot.targetSec * 1000L,
+                            remaining,
+                            snapshot.timeFlow
+                        ) / 1000L
                         TimerSessionStore.writeNotice(
                             context,
                             context.getString(

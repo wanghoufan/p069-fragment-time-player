@@ -19,6 +19,7 @@ import com.wanghoufan.fragmentplayer.core.repo.CourseRepository
 import com.wanghoufan.fragmentplayer.core.repo.PresetRepository
 import com.wanghoufan.fragmentplayer.core.repo.SessionRepository
 import com.wanghoufan.fragmentplayer.core.repo.SettingsRepository
+import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
 import com.wanghoufan.fragmentplayer.core.timer.TimerControllerApi
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
@@ -64,6 +65,8 @@ class TimerController(
     private var deadlineWallMs = 0L
     private var startedWallMs = 0L
     private var alerted = false
+    /** 本轮「时光流速」倍率；只在新一轮开始时读取，运行中不中途变速。 */
+    private var currentFlow = TimeFlowMath.NORMAL
     /** 本轮开始前的断点，用于「结束但不记入」时把进度回滚回去。 */
     private var initialCheckpoint: Checkpoint? = null
     private var pendingFinishRecord: PendingFinish? = null
@@ -86,8 +89,13 @@ class TimerController(
         val sessionId = UUID.randomUUID().toString()
         val nowWall = System.currentTimeMillis()
         val initialSec = preset.durationSec.coerceAtLeast(1)
+        // 倍率只在这一刻读取：正在配置的上一轮已结束，新开一轮才换速度。
+        val flow = runCatching { settings.current().timeFlow }
+            .getOrDefault(TimeFlowMath.NORMAL)
+            .let(TimeFlowMath::sanitize)
 
         currentSessionId = sessionId
+        currentFlow = flow
         startedWallMs = nowWall
         deadlineWallMs = 0L
         alerted = false
@@ -101,8 +109,9 @@ class TimerController(
             presetId = preset.id,
             presetName = preset.name,
             targetSec = initialSec,
-            remainingMs = initialSec * 1000L,
-            countdownOnly = countdownOnly
+            remainingMs = TimeFlowMath.realTargetMs(initialSec * 1000L, flow),
+            countdownOnly = countdownOnly,
+            timeFlow = flow
         )
         persist()
 
@@ -114,13 +123,13 @@ class TimerController(
                 return
             }
             val targetMs = targetSec * 1000L
-            deadlineWallMs = startedWallMs + targetMs
+            deadlineWallMs = TimeFlowMath.deadlineAt(startedWallMs, targetMs, flow)
             _state.update {
                 it.copy(
                     presetId = latest.id,
                     presetName = latest.name,
                     targetSec = targetSec,
-                    remainingMs = targetMs
+                    remainingMs = TimeFlowMath.realTargetMs(targetMs, flow)
                 )
             }
             persist()
@@ -206,7 +215,7 @@ class TimerController(
         deadlineWallMs = 0L
         _state.update { it.copy(phase = TimerPhase.PAUSED, remainingMs = engine.remainingMs()) }
         persist()
-        runCatching { playback.pause() }
+        pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
         TimerNotifications.cancelAlarm(appContext)
         stopTimerService()
     }
@@ -247,14 +256,16 @@ class TimerController(
         val record = pendingFinishRecord ?: return
         if (!completionLock.compareAndSet(false, true)) return
         pendingFinishRecord = null
+        // 倍速 ≠ 1 只做演示：无论用户选「记入」还是「不记入」，都不写历史、不动进度。
+        val keepsHistory = saveHistory && record.timeFlow == TimeFlowMath.NORMAL
         try {
             withContext(NonCancellable) {
-                if (saveHistory) {
+                if (keepsHistory) {
                     // 与原先的手动结束一致：先把断点补写到最新位置，再写会话记录。
                     runCatching { playback.saveCheckpointNow() }
                     runCatching { sessions.record(record.toSessionRecord()) }
                 } else if (!record.countdownOnly) {
-                    // 不记入：把本轮开始前的断点原样写回，本轮听力时长不落盘。
+                    // 不记入（含倍速 ≠ 1）：把本轮开始前的断点原样写回，本轮听力时长不落盘。
                     restoreInitialCheckpoint()
                 }
                 resetToIdle()
@@ -301,7 +312,8 @@ class TimerController(
             completed = completed,
             countdownOnly = snapshot.countdownOnly,
             startedAt = startedAt,
-            endedAt = endedAt
+            endedAt = endedAt,
+            timeFlow = TimeFlowMath.sanitize(snapshot.timeFlow)
         )
 
         engine.finish()
@@ -390,14 +402,16 @@ class TimerController(
     private fun beginRunning(targetSec: Int) {
         val sessionId = currentSessionId ?: return
         val nowWall = System.currentTimeMillis()
-        engine.start(sessionId, targetSec * 1000L, startedWallMs)
-        deadlineWallMs = nowWall + targetSec * 1000L
+        val realTargetMs = TimeFlowMath.realTargetMs(targetSec * 1000L, currentFlow)
+        engine.start(sessionId, realTargetMs, startedWallMs)
+        deadlineWallMs = nowWall + realTargetMs
         alerted = false
         _state.update {
             it.copy(
                 phase = TimerPhase.RUNNING,
-                remainingMs = targetSec * 1000L,
-                error = null
+                remainingMs = realTargetMs,
+                error = null,
+                timeFlow = currentFlow
             )
         }
         persist()
@@ -409,7 +423,7 @@ class TimerController(
     private fun cancelPreparingSession() {
         tickerJob?.cancel()
         tickerJob = null
-        runCatching { playback.pause() }
+        pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
         TimerNotifications.cancelAlarm(appContext)
         TimerNotifications.cancelAlert(appContext)
         stopTimerService()
@@ -423,7 +437,7 @@ class TimerController(
     private fun failStart(message: String) {
         tickerJob?.cancel()
         tickerJob = null
-        runCatching { playback.pause() }
+        pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
         TimerNotifications.cancelAlarm(appContext)
         TimerNotifications.cancelAlert(appContext)
         stopTimerService()
@@ -497,27 +511,34 @@ class TimerController(
         } else {
             elapsedSeconds(snapshot, targetSec)
         }
+        // 倍速 ≠ 1 只做演示：照常提醒，但不写历史、不推进断点。
+        val keepsHistory = TimeFlowMath.sanitize(snapshot.timeFlow) == TimeFlowMath.NORMAL
 
         tickerJob?.cancel()
         tickerJob = null
-        runCatching { playback.pause() }
-        runCatching { playback.saveCheckpointNow() }
+        pausePlayback(saveCheckpoint = keepsHistory)
+        if (keepsHistory) runCatching { playback.saveCheckpointNow() }
         val endedAt = System.currentTimeMillis()
         val startedAt = snapshot.startedWall.takeIf { it > 0L }
             ?: startedWallMs.takeIf { it > 0L }
             ?: (endedAt - listenedSec * 1000L)
-        runCatching {
-            sessions.record(
-                TimerSessionRecord(
-                    presetId = snapshot.presetId ?: _state.value.presetId,
-                    presetName = presetName,
-                    targetSec = targetSec,
-                    listenedSec = listenedSec,
-                    completed = completed,
-                    startedAt = startedAt,
-                    endedAt = endedAt
+        if (keepsHistory) {
+            runCatching {
+                sessions.record(
+                    TimerSessionRecord(
+                        presetId = snapshot.presetId ?: _state.value.presetId,
+                        presetName = presetName,
+                        targetSec = targetSec,
+                        listenedSec = listenedSec,
+                        completed = completed,
+                        startedAt = startedAt,
+                        endedAt = endedAt
+                    )
                 )
-            )
+            }
+        } else if (!snapshot.countdownOnly) {
+            // 非 1×：把本轮开始前的断点写回，本轮走过的位置不落盘。
+            restoreInitialCheckpoint()
         }
 
         if (completed) {
@@ -563,15 +584,20 @@ class TimerController(
     }
 
     private fun elapsedSeconds(snapshot: StoredTimerSession, targetSec: Int): Long {
-        if (engine.state != TimerState.IDLE) {
-            return (engine.elapsedMs() / 1000L).coerceIn(0L, targetSec.toLong())
+        val targetMs = targetSec * 1000L
+        val flow = TimeFlowMath.sanitize(snapshot.timeFlow)
+        val remaining = if (engine.state != TimerState.IDLE) {
+            engine.remainingMs()
+        } else {
+            when (snapshot.phase) {
+                TimerPhase.PAUSED -> snapshot.remainingMs
+                TimerPhase.RUNNING ->
+                    (snapshot.deadlineWall - System.currentTimeMillis()).coerceAtLeast(0L)
+                else -> 0L
+            }
         }
-        val remaining = when (snapshot.phase) {
-            TimerPhase.PAUSED -> snapshot.remainingMs
-            TimerPhase.RUNNING -> (snapshot.deadlineWall - System.currentTimeMillis()).coerceAtLeast(0L)
-            else -> 0L
-        }
-        return ((targetSec * 1000L - remaining).coerceAtLeast(0L) / 1000L)
+        // 引擎里是压缩后的墙钟时间，回算成目标时长口径再取整到秒。
+        return (TimeFlowMath.virtualElapsedMs(targetMs, remaining, flow) / 1000L)
             .coerceIn(0L, targetSec.toLong())
     }
 
@@ -591,7 +617,8 @@ class TimerController(
                 countdownOnly = uiState.countdownOnly,
                 alerted = alerted,
                 alertPosted = TimerSessionStore.isAlertPosted(appContext),
-                startedWall = startedWallMs
+                startedWall = startedWallMs,
+                timeFlow = currentFlow
             )
         )
     }
@@ -601,9 +628,18 @@ class TimerController(
         tickerJob = null
         TimerNotifications.cancelAlarm(appContext)
         TimerNotifications.cancelAlert(appContext)
-        runCatching { playback.pause() }
+        pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
         stopTimerService()
         engine.finish()
+    }
+
+    /** 倍速 ≠ 1 的轮次只做演示：停播放时不写断点，本轮位置不会推进进度。 */
+    private fun pausePlayback(saveCheckpoint: Boolean) {
+        if (saveCheckpoint) {
+            runCatching { playback.pause() }
+        } else {
+            runCatching { playback.pauseWithoutCheckpoint() }
+        }
     }
 
     private fun startTimerService() {
@@ -628,6 +664,7 @@ class TimerController(
 
     private fun bootstrapFromStorage() {
         val snapshot = TimerSessionStore.read(appContext)
+        currentFlow = TimeFlowMath.sanitize(snapshot.timeFlow)
         when (snapshot.phase) {
             TimerPhase.IDLE -> return
             TimerPhase.FINISHED -> {
@@ -666,7 +703,8 @@ class TimerController(
                             presetName = snapshot.presetName,
                             targetSec = snapshot.targetSec,
                             remainingMs = 0L,
-                            countdownOnly = snapshot.countdownOnly
+                            countdownOnly = snapshot.countdownOnly,
+                            timeFlow = currentFlow
                         )
                         scope.launch {
                             delay(RECOVERY_ALARM_DELAY_MS)
@@ -676,7 +714,11 @@ class TimerController(
                     return
                 }
                 // 被系统强制停止/重启：只说明真实经过时间，不假装媒体仍在播放。
-                val elapsedSec = ((snapshot.targetSec * 1000L - remaining).coerceAtLeast(0L) / 1000L)
+                val elapsedSec = TimeFlowMath.virtualElapsedMs(
+                    snapshot.targetSec * 1000L,
+                    remaining,
+                    currentFlow
+                ) / 1000L
                 TimerSessionStore.clearSession(appContext)
                 TimerNotifications.cancelAlarm(appContext)
                 stopTimerService()
@@ -698,7 +740,9 @@ class TimerController(
         val completed: Boolean,
         val countdownOnly: Boolean,
         val startedAt: Long,
-        val endedAt: Long
+        val endedAt: Long,
+        /** 本轮的时光流速倍率：≠ 1 时结算只展示，不写历史。 */
+        val timeFlow: Int
     ) {
         fun toSessionRecord() = TimerSessionRecord(
             presetId = presetId,

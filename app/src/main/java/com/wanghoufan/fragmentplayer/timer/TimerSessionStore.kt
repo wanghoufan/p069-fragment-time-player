@@ -14,7 +14,8 @@ internal data class StoredTimerSession(
     val countdownOnly: Boolean = false,
     val alerted: Boolean = false,
     val alertPosted: Boolean = false,
-    val startedWall: Long = 0L
+    val startedWall: Long = 0L,
+    val timeFlow: Int = 1
 )
 
 internal object TimerSessionStore {
@@ -31,6 +32,7 @@ internal object TimerSessionStore {
     private const val KEY_ALERTED = "alerted"
     private const val KEY_ALERT_POSTED = "alertPosted"
     private const val KEY_STARTED_WALL = "startedWall"
+    private const val KEY_TIME_FLOW = "timeFlow"
     private const val KEY_INTERRUPT_NOTICE = "interrupt_notice"
 
     private val ACTIVE_KEYS = listOf(
@@ -44,7 +46,8 @@ internal object TimerSessionStore {
         KEY_COUNTDOWN_ONLY,
         KEY_ALERTED,
         KEY_ALERT_POSTED,
-        KEY_STARTED_WALL
+        KEY_STARTED_WALL,
+        KEY_TIME_FLOW
     )
 
     private fun prefs(context: Context) =
@@ -66,7 +69,8 @@ internal object TimerSessionStore {
             countdownOnly = p.getBoolean(KEY_COUNTDOWN_ONLY, false),
             alerted = p.getBoolean(KEY_ALERTED, false),
             alertPosted = p.getBoolean(KEY_ALERT_POSTED, false),
-            startedWall = p.getLong(KEY_STARTED_WALL, 0L)
+            startedWall = p.getLong(KEY_STARTED_WALL, 0L),
+            timeFlow = p.getInt(KEY_TIME_FLOW, 1)
         )
     }
 
@@ -83,6 +87,7 @@ internal object TimerSessionStore {
             .putBoolean(KEY_ALERTED, session.alerted)
             .putBoolean(KEY_ALERT_POSTED, session.alertPosted)
             .putLong(KEY_STARTED_WALL, session.startedWall)
+            .putInt(KEY_TIME_FLOW, session.timeFlow)
             .commit()
     }
 

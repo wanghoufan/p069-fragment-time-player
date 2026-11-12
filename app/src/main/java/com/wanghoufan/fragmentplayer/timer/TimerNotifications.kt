@@ -7,8 +7,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -23,7 +21,12 @@ import java.util.Locale
  */
 object TimerNotifications {
 
-    const val CHANNEL_ALERT = "timer_alert"
+    /**
+     * 到点提醒渠道固定静音：铃声已改由 [TimerAlertSound] 用 MediaPlayer 走 USAGE_ALARM 独立播放。
+     * 渠道声音创建后不可修改，所以换新 id，并清掉旧的带铃声渠道，避免两路声音叠加。
+     */
+    const val CHANNEL_ALERT = "timer_alert_v2"
+    private const val CHANNEL_ALERT_LEGACY = "timer_alert"
     const val CHANNEL_RUNNING = "timer_running"
 
     const val ALERT_NOTIFICATION_ID = 6901
@@ -43,14 +46,8 @@ object TimerNotifications {
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = context.getString(R.string.timer_channel_alert_description)
-            setSound(
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            // 震动由代码按用户设置单独执行，渠道自身不震，避免双震。
+            // 声音与震动都由应用按用户开关单独执行，渠道自身静音，避免叠音、双震。
+            setSound(null, null)
             enableVibration(false)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
@@ -68,6 +65,7 @@ object TimerNotifications {
         runCatching {
             manager.createNotificationChannel(alert)
             manager.createNotificationChannel(running)
+            manager.deleteNotificationChannel(CHANNEL_ALERT_LEGACY)
         }
     }
 
@@ -108,17 +106,21 @@ object TimerNotifications {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
-            // 关闭铃声时仍然发通知，只是静默；不能让用户完全收不到提醒。
-            .setSilent(!sound)
+            // 声音已与通知解耦：通知恒定静音，关闭铃声时仍然发通知，不能让用户完全收不到提醒。
+            .setSilent(true)
             .build()
         runCatching { manager.notify(ALERT_NOTIFICATION_ID, notification) }
-        if (vibration) vibrate(context)
+
+        val behavior = AlertPolicy.resolve(alertSound = sound, vibration = vibration)
+        if (behavior.playRingtone) TimerAlertSound.play(context)
+        if (behavior.vibrate) vibrate(context)
     }
 
     fun cancelAlert(context: Context) {
         runCatching {
             context.getSystemService(NotificationManager::class.java)?.cancel(ALERT_NOTIFICATION_ID)
         }
+        TimerAlertSound.stop()
     }
 
     fun buildRunning(

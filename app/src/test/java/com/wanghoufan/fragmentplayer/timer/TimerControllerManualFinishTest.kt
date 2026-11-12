@@ -199,6 +199,7 @@ class TimerControllerManualFinishTest {
         override suspend fun setFontScale(scale: Float) = Unit
         override suspend fun setVibration(enabled: Boolean) = Unit
         override suspend fun setAlertSound(enabled: Boolean) = Unit
+        override suspend fun setTimeFlow(multiplier: Int) = Unit
         override suspend fun setFolderUri(uri: String?) = Unit
         override suspend fun currentFolderUri(): String? = null
     }

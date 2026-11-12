@@ -60,12 +60,15 @@ data class TimerUiState(
     val presetId: Long? = null,
     val presetName: String = "",
     val targetSec: Int = 0,
+    /** 真实墙钟剩余（已按「时光流速」压缩），界面按 timeFlow 换回目标时长显示。 */
     val remainingMs: Long = 0L,
     val countdownOnly: Boolean = false,
     val courseTitle: String? = null,
     val actualMediaMs: Long = 0L,
     val error: String? = null,
-    val result: TimerResult? = null
+    val result: TimerResult? = null,
+    /** 本轮的时光流速倍率，开始后不再变化。 */
+    val timeFlow: Int = 1
 )
 
 data class PlaybackUiState(
@@ -88,5 +91,7 @@ data class AppSettings(
     val language: LanguageMode = LanguageMode.FOLLOW_SYSTEM,
     val fontScale: Float = 1.15f,
     val vibration: Boolean = true,
-    val alertSound: Boolean = true
+    val alertSound: Boolean = true,
+    /** 「时光流速（测试用）」倍率，只压缩计时，不改变音频播放速度。 */
+    val timeFlow: Int = 1
 )

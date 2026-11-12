@@ -110,6 +110,10 @@ class CoursesSettingsViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { graph.settings.setAlertSound(enabled) }
     }
 
+    fun setTimeFlow(multiplier: Int) {
+        viewModelScope.launch { graph.settings.setTimeFlow(multiplier) }
+    }
+
     fun exportTo(uri: String) {
         viewModelScope.launch {
             graph.backups.exportTo(uri).fold(
