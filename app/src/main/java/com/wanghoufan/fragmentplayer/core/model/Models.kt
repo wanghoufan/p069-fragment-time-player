@@ -86,12 +86,20 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK }
 
 enum class LanguageMode { FOLLOW_SYSTEM, ZH_CN, EN }
 
+/**
+ * 到点铃声选项：三个内置短音 + 系统默认闹钟。
+ * 内置音都只有 1.2–1.6 秒，响一次就够，不循环。
+ */
+enum class AlertTone { CHIME, BELL, SOFT, SYSTEM }
+
 data class AppSettings(
     val theme: ThemeMode = ThemeMode.SYSTEM,
     val language: LanguageMode = LanguageMode.FOLLOW_SYSTEM,
     val fontScale: Float = 1.15f,
     val vibration: Boolean = true,
     val alertSound: Boolean = true,
+    /** 到点铃声：默认用内置「叮咚三连」，避免再依赖机型默认闹钟的长铃声。 */
+    val alertTone: AlertTone = AlertTone.CHIME,
     /** 「时光流速（测试用）」倍率，只压缩计时，不改变音频播放速度。 */
     val timeFlow: Int = 1
 )

@@ -45,6 +45,7 @@
     <string name="tui_preparing">Preparing playback…</string>
 
     <string name="tui_label_countdown_only">Timer only</string>
+    <string name="tui_label_time_flow">Test ×%1$d</string>
     <string name="tui_action_pause_timer">Pause timer</string>
     <string name="tui_action_resume_timer">Resume timer</string>
     <string name="tui_action_finish_early">End early</string>
@@ -72,4 +73,6 @@
     <string name="tui_result_early">Ended early. Actual time saved</string>
 
     <string name="tui_interrupted_title">Last session was interrupted</string>
+
+    <string name="shortcut_start_label">Start %1$s</string>
 </resources>

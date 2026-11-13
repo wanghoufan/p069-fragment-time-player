@@ -46,6 +46,11 @@ secrets.*
 .tmp/
 .cache_busting/
 
+# 智能体工具目录
+.arts/
+.codeartsdoer/
+.screenshots/
+
 # 系统文件
 .DS_Store
 Thumbs.db

@@ -26,13 +26,24 @@ class TimerEngine(
     var finishedElapsedMs: Long = 0L
         private set
 
-    fun start(sessionId: String, targetMs: Long, startedWallMs: Long = System.currentTimeMillis()) {
+    /**
+     * @param elapsedMs 从用户点「开始」到真正进入 RUNNING 之间已经过去的时长。
+     * 播放准备（选片、缓冲、起播）耗时必须计入本轮，否则实际总时长会比设定值更长，
+     * 用户拿系统倒计时对照就会看到「到点比预期晚」。
+     */
+    fun start(
+        sessionId: String,
+        targetMs: Long,
+        startedWallMs: Long = System.currentTimeMillis(),
+        elapsedMs: Long = 0L
+    ) {
         this.sessionId = sessionId
         this.targetMs = targetMs.coerceAtLeast(0L)
         this.startedWallMs = startedWallMs
         this.pausedRemainingMs = 0L
         this.finishedElapsedMs = 0L
-        this.deadlineMs = nowMs() + this.targetMs
+        val remaining = (this.targetMs - elapsedMs.coerceAtLeast(0L)).coerceAtLeast(0L)
+        this.deadlineMs = nowMs() + remaining
         this.state = TimerState.RUNNING
     }
 

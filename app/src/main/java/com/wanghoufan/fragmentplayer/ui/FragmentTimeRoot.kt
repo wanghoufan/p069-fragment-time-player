@@ -70,6 +70,16 @@ fun FragmentTimeRoot(rootViewModel: RootViewModel = viewModel()) {
     FragmentTimeTheme(themeMode = settings.theme, fontScale = settings.fontScale) {
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(RootTab.TIMER.ordinal) }
         val tabs = RootTab.entries
+
+        val shortcutRequest by rootViewModel.shortcutStartPresetId.collectAsStateWithLifecycle()
+        LaunchedEffect(shortcutRequest) {
+            val presetId = shortcutRequest ?: return@LaunchedEffect
+            // 快捷方式至少要回到计时页；已在计时时这里不会再重开一轮。
+            selectedTabIndex = RootTab.TIMER.ordinal
+            rootViewModel.startFromShortcut(presetId)
+            rootViewModel.consumeShortcutStart()
+        }
+
         val navigateToCourses: () -> Unit = remember {
             {
                 selectedTabIndex = RootTab.COURSES.ordinal

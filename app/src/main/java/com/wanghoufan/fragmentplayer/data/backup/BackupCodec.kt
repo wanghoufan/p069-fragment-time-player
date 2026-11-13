@@ -1,5 +1,6 @@
 package com.wanghoufan.fragmentplayer.data.backup
 
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.LanguageMode
 import com.wanghoufan.fragmentplayer.core.repo.BackupSummary
 import kotlinx.serialization.Serializable
@@ -17,6 +18,7 @@ data class BackupSettingsDto(
     val fontScale: Float = 1.15f,
     val vibration: Boolean = true,
     val alertSound: Boolean = true,
+    val alertTone: String = AlertTone.CHIME.name,
     val folderUri: String? = null
 )
 
@@ -86,6 +88,7 @@ object BackupCodec {
 
     private val VALID_THEMES = setOf("SYSTEM", "LIGHT", "DARK")
     private val VALID_LANGUAGES = LanguageMode.entries.map { it.name }.toSet()
+    private val VALID_TONES = AlertTone.entries.map { it.name }.toSet()
 
     fun encode(file: BackupFile): String = json.encodeToString(file)
 
@@ -101,14 +104,22 @@ object BackupCodec {
         return normalize(file)
     }
 
-    private fun normalize(file: BackupFile): BackupFile =
-        if (file.settings.language in VALID_LANGUAGES) {
-            file
+    private fun normalize(file: BackupFile): BackupFile {
+        val language = if (file.settings.language in VALID_LANGUAGES) {
+            file.settings.language
         } else {
-            file.copy(
-                settings = file.settings.copy(language = LanguageMode.FOLLOW_SYSTEM.name)
-            )
+            LanguageMode.FOLLOW_SYSTEM.name
         }
+        // 旧备份没有 alertTone 字段或写了未知值，都回退到默认铃声，不让导入失败。
+        val tone = if (file.settings.alertTone in VALID_TONES) {
+            file.settings.alertTone
+        } else {
+            AlertTone.CHIME.name
+        }
+        return file.copy(
+            settings = file.settings.copy(language = language, alertTone = tone)
+        )
+    }
 
     fun summary(file: BackupFile): BackupSummary = BackupSummary(
         presets = file.presets.size,

@@ -1,5 +1,6 @@
 package com.wanghoufan.fragmentplayer.core.repo
 
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.Checkpoint
 import com.wanghoufan.fragmentplayer.core.model.Course
@@ -51,6 +52,7 @@ interface SettingsRepository {
     suspend fun setFontScale(scale: Float)
     suspend fun setVibration(enabled: Boolean)
     suspend fun setAlertSound(enabled: Boolean)
+    suspend fun setAlertTone(tone: AlertTone)
     suspend fun setTimeFlow(multiplier: Int)
     suspend fun setFolderUri(uri: String?)
     suspend fun currentFolderUri(): String?

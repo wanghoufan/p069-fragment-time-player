@@ -91,6 +91,9 @@ fun TimerScreen(vm: MainViewModel = viewModel()) {
     var editorPreset by remember { mutableStateOf<Preset?>(null) }
     var showEditor by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf<Preset?>(null) }
+    // 启动失败时「仅倒计时」必须沿用用户刚点的那一个场景时长，
+    // 否则会退回到列表第一个预设，用户选 3 分钟却按 2 分钟计时。
+    var lastStartPreset by remember { mutableStateOf<Preset?>(null) }
 
     val fallbackName = stringResource(R.string.tui_default_preset_name)
     val fallbackPreset = remember(presets, fallbackName) {
@@ -102,6 +105,7 @@ fun TimerScreen(vm: MainViewModel = viewModel()) {
     }
 
     val startWithFeedback: (Preset, Boolean) -> Unit = { preset, countdownOnly ->
+        lastStartPreset = preset
         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
         vm.start(preset, countdownOnly)
     }
@@ -130,6 +134,7 @@ fun TimerScreen(vm: MainViewModel = viewModel()) {
             },
             onDelete = { pendingDelete = it },
             onGoImport = navigateToCourses,
+            countdownPreset = lastStartPreset ?: fallbackPreset,
             onRetry = {
                 val target = timer.presetId
                     ?.let { id -> presets.firstOrNull { it.id == id } }
@@ -138,7 +143,7 @@ fun TimerScreen(vm: MainViewModel = viewModel()) {
             }
         )
 
-        TimerPhase.PREPARING -> PreparingSection(onCancel = vm::cancelPreparing)
+        TimerPhase.PREPARING -> PreparingSection(timer = timer, onCancel = vm::cancelPreparing)
 
         TimerPhase.RUNNING, TimerPhase.PAUSED -> ActiveSection(
             timer = timer,
@@ -217,6 +222,7 @@ private fun IdleSection(
     checkpoint: Checkpoint?,
     error: String?,
     fallbackPreset: Preset,
+    countdownPreset: Preset,
     onStart: (Preset, Boolean) -> Unit,
     onAdd: () -> Unit,
     onEdit: (Preset) -> Unit,
@@ -246,7 +252,7 @@ private fun IdleSection(
             StartErrorCard(
                 message = error,
                 onRetry = onRetry,
-                onCountdownOnly = { onStart(fallbackPreset, true) }
+                onCountdownOnly = { onStart(countdownPreset, true) }
             )
         }
 
@@ -538,7 +544,12 @@ private fun CurrentCourseCard(
 }
 
 @Composable
-private fun PreparingSection(onCancel: () -> Unit) {
+private fun PreparingSection(timer: TimerUiState, onCancel: () -> Unit) {
+    val targetMs = (timer.targetSec * 1000L).coerceAtLeast(1L)
+    // 准备阶段也以「点击开始」为起点递减，和系统倒计时同步；
+    // 播放器起播前的加载时间不再白白多算。
+    val displayRemainingMs = TimeFlowMath.displayRemainingMs(targetMs, timer.remainingMs, timer.timeFlow)
+    val remainingSec = (displayRemainingMs + 999L) / 1000L
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -549,6 +560,12 @@ private fun PreparingSection(onCancel: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text(
+                text = clockText(remainingSec),
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1
+            )
             CircularProgressIndicator()
             Text(
                 text = stringResource(R.string.tui_preparing),
@@ -609,6 +626,15 @@ private fun ActiveSection(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
+            if (timer.timeFlow != TimeFlowMath.NORMAL) {
+                // 非 1× 是测试开关：在计时页明确标出，避免被误当成「正常计时」，
+                // 否则用户会看到 2 分钟 12 秒就结束，以为时间不准。
+                Text(
+                    text = stringResource(R.string.tui_label_time_flow, timer.timeFlow),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             if (timer.countdownOnly) {
                 Text(
                     text = stringResource(R.string.tui_label_countdown_only),

@@ -3,6 +3,7 @@ package com.wanghoufan.fragmentplayer.timer
 import android.content.Context
 import androidx.media3.common.Player
 import androidx.test.core.app.ApplicationProvider
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.Checkpoint
 import com.wanghoufan.fragmentplayer.core.model.Course
@@ -243,6 +244,7 @@ class TimeFlowHistoryTest {
         override suspend fun setFontScale(scale: Float) = Unit
         override suspend fun setVibration(enabled: Boolean) = Unit
         override suspend fun setAlertSound(enabled: Boolean) = Unit
+        override suspend fun setAlertTone(tone: AlertTone) = Unit
         override suspend fun setTimeFlow(multiplier: Int) = Unit
         override suspend fun setFolderUri(uri: String?) = Unit
         override suspend fun currentFolderUri(): String? = null

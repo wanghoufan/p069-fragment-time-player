@@ -49,7 +49,9 @@ class TimerController(
     private val checkpoints: CheckpointRepository,
     private val sessions: SessionRepository,
     private val settings: SettingsRepository,
-    private val playback: PlaybackEngineApi
+    private val playback: PlaybackEngineApi,
+    /** 墙钟时间源：只用于「点击开始」与持久化基准，倒计时本身走单调时钟。 */
+    private val nowWall: () -> Long = { System.currentTimeMillis() }
 ) : TimerControllerApi {
 
     private val appContext = context.applicationContext
@@ -61,6 +63,8 @@ class TimerController(
     override val state: StateFlow<TimerUiState> = _state.asStateFlow()
 
     private var tickerJob: Job? = null
+    private var preparingTickerJob: Job? = null
+    private var lastPreparingPersistedSec = -1L
     private var currentSessionId: String? = null
     private var deadlineWallMs = 0L
     private var startedWallMs = 0L
@@ -87,7 +91,7 @@ class TimerController(
     override suspend fun start(preset: Preset, countdownOnly: Boolean) {
         cancelActiveSession()
         val sessionId = UUID.randomUUID().toString()
-        val nowWall = System.currentTimeMillis()
+        val startWall = nowWall()
         val initialSec = preset.durationSec.coerceAtLeast(1)
         // 倍率只在这一刻读取：正在配置的上一轮已结束，新开一轮才换速度。
         val flow = runCatching { settings.current().timeFlow }
@@ -96,24 +100,27 @@ class TimerController(
 
         currentSessionId = sessionId
         currentFlow = flow
-        startedWallMs = nowWall
+        startedWallMs = startWall
         deadlineWallMs = 0L
         alerted = false
         initialCheckpoint = null
         TimerSessionStore.clearSession(appContext)
         TimerNotifications.resetAlertPosted(appContext)
 
+        val initialRealTargetMs = TimeFlowMath.realTargetMs(initialSec * 1000L, flow)
         _state.value = TimerUiState(
             phase = TimerPhase.PREPARING,
             sessionId = sessionId,
             presetId = preset.id,
             presetName = preset.name,
             targetSec = initialSec,
-            remainingMs = TimeFlowMath.realTargetMs(initialSec * 1000L, flow),
+            remainingMs = initialRealTargetMs,
             countdownOnly = countdownOnly,
             timeFlow = flow
         )
         persist()
+        // 准备阶段也按「点击开始」为起点递减，用户能直接看到时间和系统倒计时同步。
+        restartPreparingTicker(sessionId, initialRealTargetMs)
 
         try {
             val latest = runCatching { presets.get(preset.id) }.getOrNull() ?: preset
@@ -124,15 +131,17 @@ class TimerController(
             }
             val targetMs = targetSec * 1000L
             deadlineWallMs = TimeFlowMath.deadlineAt(startedWallMs, targetMs, flow)
+            val realTargetMs = TimeFlowMath.realTargetMs(targetMs, flow)
             _state.update {
                 it.copy(
                     presetId = latest.id,
                     presetName = latest.name,
                     targetSec = targetSec,
-                    remainingMs = TimeFlowMath.realTargetMs(targetMs, flow)
+                    remainingMs = realTargetMs
                 )
             }
             persist()
+            restartPreparingTicker(sessionId, realTargetMs)
 
             if (countdownOnly) {
                 beginRunningIfPreparing(sessionId, targetSec)
@@ -224,7 +233,7 @@ class TimerController(
         if (_state.value.phase != TimerPhase.PAUSED) return
         engine.resume()
         val remaining = engine.remainingMs()
-        deadlineWallMs = System.currentTimeMillis() + remaining
+        deadlineWallMs = nowWall() + remaining
         _state.update { it.copy(phase = TimerPhase.RUNNING, remainingMs = remaining) }
         persist()
         if (!_state.value.countdownOnly) {
@@ -299,7 +308,7 @@ class TimerController(
         tickerJob = null
         // 立即停播放；这一步刻意不写断点，是否落盘交给用户接下来的选择。
         runCatching { playback.pauseWithoutCheckpoint() }
-        val endedAt = System.currentTimeMillis()
+        val endedAt = nowWall()
         val startedAt = snapshot.startedWall.takeIf { it > 0L }
             ?: startedWallMs.takeIf { it > 0L }
             ?: (endedAt - listenedSec * 1000L)
@@ -343,6 +352,7 @@ class TimerController(
     }
 
     private fun resetToIdle() {
+        stopPreparingTicker()
         pendingFinishRecord = null
         _pendingFinish.value = null
         initialCheckpoint = null
@@ -401,15 +411,19 @@ class TimerController(
 
     private fun beginRunning(targetSec: Int) {
         val sessionId = currentSessionId ?: return
-        val nowWall = System.currentTimeMillis()
         val realTargetMs = TimeFlowMath.realTargetMs(targetSec * 1000L, currentFlow)
-        engine.start(sessionId, realTargetMs, startedWallMs)
-        deadlineWallMs = nowWall + realTargetMs
+        // 准备耗时（点开始 → 真正起播）计入本轮：到点时刻固定为「点击时刻 + 设定时长」，
+        // 这样无论有无课程、前台还是锁屏，到点都能和系统倒计时对齐。
+        val prepElapsedMs = (nowWall() - startedWallMs).coerceAtLeast(0L)
+        preparingTickerJob?.cancel()
+        preparingTickerJob = null
+        engine.start(sessionId, realTargetMs, startedWallMs, prepElapsedMs)
+        deadlineWallMs = startedWallMs + realTargetMs
         alerted = false
         _state.update {
             it.copy(
                 phase = TimerPhase.RUNNING,
-                remainingMs = realTargetMs,
+                remainingMs = engine.remainingMs(),
                 error = null,
                 timeFlow = currentFlow
             )
@@ -420,7 +434,38 @@ class TimerController(
         restartTicker()
     }
 
+    /**
+     * 准备阶段（PREPARING）的显示时钟：同样以「点击开始」为起点递减，
+     * 让用户在播放器起播前就能看到倒计时在走，而不是停在整个时长上。
+     */
+    private fun restartPreparingTicker(sessionId: String, realTargetMs: Long) {
+        preparingTickerJob?.cancel()
+        preparingTickerJob = scope.launch {
+            while (isActive) {
+                if (!isPreparing(sessionId)) break
+                val elapsed = (nowWall() - startedWallMs).coerceAtLeast(0L)
+                val remaining = (realTargetMs - elapsed).coerceAtLeast(0L)
+                _state.update {
+                    if (it.phase == TimerPhase.PREPARING) it.copy(remainingMs = remaining) else it
+                }
+                val remainingSec = remaining / 1000L
+                if (remainingSec != lastPreparingPersistedSec) {
+                    lastPreparingPersistedSec = remainingSec
+                    persist()
+                }
+                delay(TICK_INTERVAL_MS)
+            }
+        }
+    }
+
+    private fun stopPreparingTicker() {
+        preparingTickerJob?.cancel()
+        preparingTickerJob = null
+        lastPreparingPersistedSec = -1L
+    }
+
     private fun cancelPreparingSession() {
+        stopPreparingTicker()
         tickerJob?.cancel()
         tickerJob = null
         pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
@@ -435,6 +480,7 @@ class TimerController(
     }
 
     private fun failStart(message: String) {
+        stopPreparingTicker()
         tickerJob?.cancel()
         tickerJob = null
         pausePlayback(saveCheckpoint = currentFlow == TimeFlowMath.NORMAL)
@@ -514,11 +560,15 @@ class TimerController(
         // 倍速 ≠ 1 只做演示：照常提醒，但不写历史、不推进断点。
         val keepsHistory = TimeFlowMath.sanitize(snapshot.timeFlow) == TimeFlowMath.NORMAL
 
+        // 提醒优先：先出声/发通知，再做停播放与落库。
+        // 否则数据库写入会把「到点那一刻」往后推几百毫秒，用户拿系统倒计时对照就会觉得晚。
+        if (completed) postAlertOnce(presetName, targetSec)
+
         tickerJob?.cancel()
         tickerJob = null
         pausePlayback(saveCheckpoint = keepsHistory)
         if (keepsHistory) runCatching { playback.saveCheckpointNow() }
-        val endedAt = System.currentTimeMillis()
+        val endedAt = nowWall()
         val startedAt = snapshot.startedWall.takeIf { it > 0L }
             ?: startedWallMs.takeIf { it > 0L }
             ?: (endedAt - listenedSec * 1000L)
@@ -541,11 +591,7 @@ class TimerController(
             restoreInitialCheckpoint()
         }
 
-        if (completed) {
-            postAlertOnce(presetName, targetSec)
-        } else {
-            TimerNotifications.cancelAlert(appContext)
-        }
+        if (!completed) TimerNotifications.cancelAlert(appContext)
         alerted = completed
         engine.finish()
         deadlineWallMs = 0L
@@ -579,7 +625,8 @@ class TimerController(
             presetName = presetName,
             targetSec = targetSec,
             sound = currentSettings.alertSound,
-            vibration = currentSettings.vibration
+            vibration = currentSettings.vibration,
+            tone = currentSettings.alertTone
         )
     }
 
@@ -592,7 +639,7 @@ class TimerController(
             when (snapshot.phase) {
                 TimerPhase.PAUSED -> snapshot.remainingMs
                 TimerPhase.RUNNING ->
-                    (snapshot.deadlineWall - System.currentTimeMillis()).coerceAtLeast(0L)
+                    (snapshot.deadlineWall - nowWall()).coerceAtLeast(0L)
                 else -> 0L
             }
         }
@@ -624,6 +671,7 @@ class TimerController(
     }
 
     private fun cancelActiveSession() {
+        stopPreparingTicker()
         tickerJob?.cancel()
         tickerJob = null
         TimerNotifications.cancelAlarm(appContext)
@@ -684,7 +732,7 @@ class TimerController(
                 val remaining = if (snapshot.phase == TimerPhase.PAUSED) {
                     snapshot.remainingMs
                 } else {
-                    (snapshot.deadlineWall - System.currentTimeMillis()).coerceAtLeast(0L)
+                    (snapshot.deadlineWall - nowWall()).coerceAtLeast(0L)
                 }
                 if (snapshot.alertPosted) {
                     TimerSessionStore.clearSession(appContext)

@@ -3,6 +3,12 @@
     <string name="seu_section_playback">Playback and alerts</string>
     <string name="seu_label_vibration">Vibrate at the end</string>
     <string name="seu_label_alert_sound">Alert sound at the end</string>
+    <string name="seu_label_alert_tone">Alert tone</string>
+    <string name="seu_tone_chime">Chime</string>
+    <string name="seu_tone_bell">Bell</string>
+    <string name="seu_tone_soft">Soft</string>
+    <string name="seu_tone_system">System alarm</string>
+    <string name="seu_alert_tone_hint">Each tone plays once for about 2 seconds. Tap a tone to preview it.</string>
     <string name="seu_action_test_vibration">Test vibration</string>
     <string name="seu_action_test_sound">Test alert sound</string>
     <string name="seu_test_vibration_unavailable">This device has no vibration available</string>

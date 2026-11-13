@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.core.app.ServiceCompat
 import com.wanghoufan.fragmentplayer.FragmentTimeApp
 import com.wanghoufan.fragmentplayer.core.model.TimerPhase
@@ -32,6 +33,7 @@ class TimerService : Service() {
     private var observerJob: Job? = null
     private var foregroundStarted = false
     private var alarmInFlight = false
+    private var wakeLock: PowerManager.WakeLock? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -74,6 +76,7 @@ class TimerService : Service() {
         if (timer.state.value.phase == TimerPhase.RUNNING) {
             showRunning(timer)
         } else if (!alarmInFlight) {
+            releaseWakeLock()
             stopForegroundNow()
             stopSelf()
         }
@@ -88,6 +91,7 @@ class TimerService : Service() {
         observerJob = null
         scope.cancel()
         if (!alarmInFlight) alarmScope.cancel()
+        releaseWakeLock()
         stopForegroundNow()
         super.onDestroy()
     }
@@ -102,6 +106,7 @@ class TimerService : Service() {
                     when (phase) {
                         TimerPhase.RUNNING -> showRunning(timer)
                         else -> if (!alarmInFlight) {
+                            releaseWakeLock()
                             stopForegroundNow()
                             stopSelf()
                         }
@@ -116,6 +121,30 @@ class TimerService : Service() {
         startForegroundNow(
             TimerNotifications.buildRunning(this, uiState.presetName, uiState.remainingMs)
         )
+        acquireWakeLock(uiState.remainingMs)
+    }
+
+    /**
+     * 计时期间持部分唤醒锁：锁屏后主线程仍能推进 ticker，
+     * 即使厂商把闹钟推迟，也能在第一现场按单调时钟收尾。
+     * 超时与剩余时长对齐，到点后自动释放，不会无限期占电。
+     */
+    private fun acquireWakeLock(remainingMs: Long) {
+        if (remainingMs <= 0L) return
+        val manager = runCatching { getSystemService(PowerManager::class.java) }.getOrNull() ?: return
+        val lock = wakeLock ?: runCatching {
+            manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG).apply {
+                setReferenceCounted(false)
+            }
+        }.getOrNull() ?: return
+        wakeLock = lock
+        runCatching { lock.acquire(remainingMs + WAKE_LOCK_GRACE_MS) }
+    }
+
+    private fun releaseWakeLock() {
+        val lock = wakeLock ?: return
+        wakeLock = null
+        runCatching { if (lock.isHeld) lock.release() }
     }
 
     private fun startForegroundNow(notification: android.app.Notification) {
@@ -149,5 +178,7 @@ class TimerService : Service() {
         const val ACTION_SYNC = "com.wanghoufan.fragmentplayer.timer.ACTION_SYNC"
         const val ACTION_ALARM = "com.wanghoufan.fragmentplayer.timer.ACTION_ALARM"
         const val EXTRA_SESSION_ID = "session_id"
+        private const val WAKE_LOCK_TAG = "fragmentplayer:timer"
+        private const val WAKE_LOCK_GRACE_MS = 10_000L
     }
 }

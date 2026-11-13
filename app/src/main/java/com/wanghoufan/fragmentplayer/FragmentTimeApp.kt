@@ -11,12 +11,16 @@ import com.wanghoufan.fragmentplayer.data.repo.SessionRepositoryImpl
 import com.wanghoufan.fragmentplayer.data.settings.SettingsRepositoryImpl
 import com.wanghoufan.fragmentplayer.importer.CourseImporterImpl
 import com.wanghoufan.fragmentplayer.playback.PlaybackEngine
+import com.wanghoufan.fragmentplayer.shortcut.ShortcutStart
 import com.wanghoufan.fragmentplayer.timer.TimerController
 import com.wanghoufan.fragmentplayer.timer.TimerNotifications
 import com.wanghoufan.fragmentplayer.ui.applyLanguage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -27,6 +31,18 @@ class FragmentTimeApp : Application() {
     // 依赖图按首次访问构建，避免拖慢冷启动与后台启动耗时。
     val graph: AppGraph by lazy { buildGraph() }
 
+    /** 桌面快捷方式带来的待处理场景；由根界面消费，避免冷启动时丢失。 */
+    private val _shortcutStartPresetId = MutableStateFlow<Long?>(null)
+    val shortcutStartPresetId: StateFlow<Long?> = _shortcutStartPresetId.asStateFlow()
+
+    fun requestShortcutStart(presetId: Long) {
+        _shortcutStartPresetId.value = presetId
+    }
+
+    fun consumeShortcutStart() {
+        _shortcutStartPresetId.value = null
+    }
+
     override fun onCreate() {
         super.onCreate()
         applySavedLanguage()
@@ -35,6 +51,13 @@ class FragmentTimeApp : Application() {
         appScope.launch {
             runCatching { graph.presets.ensureDefaults() }
                 .onFailure { Log.w(TAG, "ensureDefaults failed", it) }
+        }
+        // 场景增删改都会重新发射；菜单始终与 App 里的场景列表保持一致。
+        appScope.launch {
+            graph.presets.presets.collect { presets ->
+                runCatching { ShortcutStart.refresh(this@FragmentTimeApp, presets) }
+                    .onFailure { Log.w(TAG, "refresh shortcuts failed", it) }
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.wanghoufan.fragmentplayer.FragmentTimeApp
 import com.wanghoufan.fragmentplayer.R
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,7 +38,8 @@ class TimerAlarmReceiver : BroadcastReceiver() {
                         presetName = snapshot.presetName.ifBlank { context.getString(R.string.app_name) },
                         targetSec = snapshot.targetSec,
                         sound = currentSettings?.alertSound ?: true,
-                        vibration = currentSettings?.vibration ?: true
+                        vibration = currentSettings?.vibration ?: true,
+                        tone = currentSettings?.alertTone ?: AlertTone.CHIME
                     )
                     val serviceIntent = Intent(context, TimerService::class.java).apply {
                         action = TimerService.ACTION_ALARM

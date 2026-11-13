@@ -8,6 +8,7 @@ import com.wanghoufan.fragmentplayer.FragmentTimeApp
 import com.wanghoufan.fragmentplayer.R
 import com.wanghoufan.fragmentplayer.core.importer.ImportResult
 import com.wanghoufan.fragmentplayer.core.importer.ScanProgress
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.Checkpoint
 import com.wanghoufan.fragmentplayer.core.model.Course
@@ -108,6 +109,10 @@ class CoursesSettingsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setAlertSound(enabled: Boolean) {
         viewModelScope.launch { graph.settings.setAlertSound(enabled) }
+    }
+
+    fun setAlertTone(tone: AlertTone) {
+        viewModelScope.launch { graph.settings.setAlertTone(tone) }
     }
 
     fun setTimeFlow(multiplier: Int) {

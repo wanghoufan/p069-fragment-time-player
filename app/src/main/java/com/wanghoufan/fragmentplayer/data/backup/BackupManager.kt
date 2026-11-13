@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.room.withTransaction
 import com.wanghoufan.fragmentplayer.R
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.LanguageMode
 import com.wanghoufan.fragmentplayer.core.model.ThemeMode
 import com.wanghoufan.fragmentplayer.core.repo.BackupApi
@@ -93,6 +94,7 @@ class BackupManager(
                 fontScale = current.fontScale,
                 vibration = current.vibration,
                 alertSound = current.alertSound,
+                alertTone = current.alertTone.name,
                 folderUri = folder
             ),
             presets = db.presetDao().all().map { it.toDto() },
@@ -138,6 +140,9 @@ class BackupManager(
         settings.setFontScale(settingsDto.fontScale)
         settings.setVibration(settingsDto.vibration)
         settings.setAlertSound(settingsDto.alertSound)
+        settings.setAlertTone(
+            runCatching { AlertTone.valueOf(settingsDto.alertTone) }.getOrDefault(AlertTone.CHIME)
+        )
         settings.setFolderUri(settingsDto.folderUri?.takeIf { it.isNotBlank() })
     }
 

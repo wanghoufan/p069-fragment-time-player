@@ -132,4 +132,40 @@ class BackupCodecTest {
         val decoded = BackupCodec.decode(BackupCodec.encode(sample()))
         assertEquals("FOLLOW_SYSTEM", decoded.settings.language)
     }
+
+    @Test
+    fun alertToneRoundTrips() {
+        val text = BackupCodec.encode(sample().copy(
+            settings = sample().settings.copy(alertTone = "BELL")
+        ))
+        assertEquals("BELL", BackupCodec.decode(text).settings.alertTone)
+    }
+
+    @Test
+    fun legacyBackupWithoutAlertToneDefaultsToChime() {
+        val legacy = """
+            {
+              "version": 1,
+              "exportedAt": 0,
+              "settings": {
+                "theme": "SYSTEM",
+                "fontScale": 1.15,
+                "vibration": true,
+                "alertSound": true,
+                "folderUri": null
+              },
+              "presets": [],
+              "courses": [],
+              "checkpoint": null,
+              "sessions": []
+            }
+        """.trimIndent()
+        assertEquals("CHIME", BackupCodec.decode(legacy).settings.alertTone)
+    }
+
+    @Test
+    fun invalidAlertToneFallsBackToChime() {
+        val text = BackupCodec.encode(sample()).replace("\"CHIME\"", "\"MARIMBA\"")
+        assertEquals("CHIME", BackupCodec.decode(text).settings.alertTone)
+    }
 }

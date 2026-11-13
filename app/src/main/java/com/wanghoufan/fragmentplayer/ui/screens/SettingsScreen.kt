@@ -8,11 +8,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -63,11 +60,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wanghoufan.fragmentplayer.BuildConfig
 import com.wanghoufan.fragmentplayer.R
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import com.wanghoufan.fragmentplayer.core.model.AppSettings
 import com.wanghoufan.fragmentplayer.core.model.LanguageMode
 import com.wanghoufan.fragmentplayer.core.model.ThemeMode
 import com.wanghoufan.fragmentplayer.core.repo.BackupSummary
 import com.wanghoufan.fragmentplayer.core.timer.TimeFlowMath
+import com.wanghoufan.fragmentplayer.timer.TimerAlertSound
 import com.wanghoufan.fragmentplayer.ui.components.ChoiceRow
 import com.wanghoufan.fragmentplayer.ui.components.SectionCard
 import com.wanghoufan.fragmentplayer.ui.components.SettingRow
@@ -96,7 +95,7 @@ private val BACKUP_MIME_TYPES = arrayOf(
 )
 
 private const val TEST_VIBRATION_MS = 200L
-private const val TEST_SOUND_DURATION_MS = 4_000L
+
 private const val FONT_SCALE_EPSILON = 0.01f
 
 @Composable
@@ -112,10 +111,6 @@ fun SettingsScreen() {
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarMessageCollector(snackbarHostState, viewModel.messages)
 
-    val handler = remember { Handler(Looper.getMainLooper()) }
-    DisposableEffect(Unit) {
-        onDispose { handler.removeCallbacksAndMessages(null) }
-    }
 
     var notificationGranted by remember { mutableStateOf(hasNotificationPermission(context)) }
     var exactAlarmAllowed by remember { mutableStateOf(canScheduleExactAlarms(context)) }
@@ -208,18 +203,8 @@ fun SettingsScreen() {
     }
 
     fun testAlertSound() {
-        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val ringtone = uri?.let { runCatching { RingtoneManager.getRingtone(context, it) }.getOrNull() }
-        if (ringtone == null) {
-            scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.seu_test_sound_unavailable)) }
-            return
-        }
-        val played = runCatching {
-            ringtone.play()
-            handler.postDelayed({ runCatching { ringtone.stop() } }, TEST_SOUND_DURATION_MS)
-        }.isSuccess
-        if (!played) {
+        // 试听与到点走同一条播放路径，听到的就是实际会响的那一个。
+        if (!TimerAlertSound.play(context, settings.alertTone)) {
             scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.seu_test_sound_failed)) }
         }
     }
@@ -266,6 +251,8 @@ fun SettingsScreen() {
                 settings = settings,
                 onVibrationChange = viewModel::setVibration,
                 onAlertSoundChange = viewModel::setAlertSound,
+                onToneChange = viewModel::setAlertTone,
+                onPreviewTone = { tone -> TimerAlertSound.play(context, tone) },
                 onTestVibration = { testVibration() },
                 onTestSound = { testAlertSound() }
             )
@@ -359,6 +346,8 @@ private fun PlaybackAlertSection(
     settings: AppSettings,
     onVibrationChange: (Boolean) -> Unit,
     onAlertSoundChange: (Boolean) -> Unit,
+    onToneChange: (AlertTone) -> Unit,
+    onPreviewTone: (AlertTone) -> Unit,
     onTestVibration: () -> Unit,
     onTestSound: () -> Unit
 ) {
@@ -375,6 +364,23 @@ private fun PlaybackAlertSection(
                 Switch(checked = settings.alertSound, onCheckedChange = onAlertSoundChange)
             }
         )
+        Text(
+            text = stringResource(R.string.seu_label_alert_tone),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        AlertTone.entries.forEach { tone ->
+            ChoiceRow(
+                label = stringResource(tone.labelRes()),
+                selected = settings.alertTone == tone,
+                onClick = {
+                    // 点选即试听：先切到该铃声，让用户立刻听到差别。
+                    onToneChange(tone)
+                    onPreviewTone(tone)
+                }
+            )
+        }
+        HintText(stringResource(R.string.seu_alert_tone_hint))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -397,6 +403,13 @@ private fun PlaybackAlertSection(
             }
         }
     }
+}
+
+private fun AlertTone.labelRes(): Int = when (this) {
+    AlertTone.CHIME -> R.string.seu_tone_chime
+    AlertTone.BELL -> R.string.seu_tone_bell
+    AlertTone.SOFT -> R.string.seu_tone_soft
+    AlertTone.SYSTEM -> R.string.seu_tone_system
 }
 
 @Composable

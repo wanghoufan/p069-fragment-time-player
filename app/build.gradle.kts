@@ -14,8 +14,8 @@ android {
         applicationId = "com.wanghoufan.fragmentplayer"
         minSdk = 26
         targetSdk = 36
-        versionCode = 16
-        versionName = "0.2.5"
+        versionCode = 21
+        versionName = "0.2.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,6 +42,8 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        // 铃声资源测试需要真实的 res/raw 才能读到音频大小。
+        unitTests.isIncludeAndroidResources = true
     }
 }
 

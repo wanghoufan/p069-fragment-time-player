@@ -13,6 +13,7 @@ import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.wanghoufan.fragmentplayer.MainActivity
 import com.wanghoufan.fragmentplayer.R
+import com.wanghoufan.fragmentplayer.core.model.AlertTone
 import java.util.Locale
 
 /**
@@ -84,7 +85,8 @@ object TimerNotifications {
         presetName: String,
         targetSec: Int,
         sound: Boolean,
-        vibration: Boolean
+        vibration: Boolean,
+        tone: AlertTone = AlertTone.CHIME
     ) {
         ensureChannels(context)
         val manager = runCatching {
@@ -112,7 +114,7 @@ object TimerNotifications {
         runCatching { manager.notify(ALERT_NOTIFICATION_ID, notification) }
 
         val behavior = AlertPolicy.resolve(alertSound = sound, vibration = vibration)
-        if (behavior.playRingtone) TimerAlertSound.play(context)
+        if (behavior.playRingtone) TimerAlertSound.play(context, tone)
         if (behavior.vibrate) vibrate(context)
     }
 
@@ -170,11 +172,20 @@ object TimerNotifications {
         val pending = alarmPendingIntent(context, sessionId, PendingIntent.FLAG_UPDATE_CURRENT)
             ?: return
         val triggerAt = System.currentTimeMillis() + remainingMs
+        val canExact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            runCatching { alarmManager.canScheduleExactAlarms() }.getOrDefault(false)
         runCatching {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
+            if (canExact) {
+                // 计时器到点必须唤醒设备：setAlarmClock 在 Doze 下也精确触发，
+                // 不受「每 9 分钟才给一次机会」的限流，锁屏/长时间熄屏后仍能准点到点。
+                alarmManager.setAlarmClock(
+                    AlarmManager.AlarmClockInfo(triggerAt, openApp(context)),
+                    pending
+                )
             } else {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
+                // 未授权精确闹钟时只能退化为允许待机触发的不精确闹钟；
+                // 设置页会提示用户去授权，避免长时倒计时明显延后。
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pending)
             }
         }
     }

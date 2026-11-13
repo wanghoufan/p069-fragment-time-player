@@ -45,6 +45,7 @@
     <string name="tui_preparing">正在准备播放…</string>
 
     <string name="tui_label_countdown_only">仅倒计时</string>
+    <string name="tui_label_time_flow">测试 ×%1$d</string>
     <string name="tui_action_pause_timer">暂停计时</string>
     <string name="tui_action_resume_timer">继续计时</string>
     <string name="tui_action_finish_early">提前结束</string>
@@ -72,4 +73,6 @@
     <string name="tui_result_early">提前结束，已按实际用时保存</string>
 
     <string name="tui_interrupted_title">上次计时被中断</string>
+
+    <string name="shortcut_start_label">开始%1$s</string>
 </resources>
