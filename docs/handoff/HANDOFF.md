@@ -28,7 +28,7 @@
 - Stage ID：M18 桌面长按快捷方式（0.2.8）（M17 铃声 0.2.7 已完成）
 - 版本实测：**四台均 0.2.8 / vc21**（SHA `779c8433…814c`）：OPPO、12T Pro、12 Pro 覆盖安装（firstInstallTime 未变、DB 前后一致）；Note 11T Pro+ 首次安装（原未装）
 - 素材实测：12T Pro 真实 13 节 MP3、5 条历史未动；12 Pro 无课程（仅倒计时路径）
-- 剩 P0：①12T Pro 上有课程时的快捷启动+续播 ②首次发布用户签收 ③commit 授权（main，不 push）
+- 剩 P0：①12T Pro 上有课程时的快捷启动+续播 ②首次发布用户签收
 - 当前 Task：0.2.8 已构建、真机 8 项 PASS、四机同包；代码未提交
 - 执行链/Session：无（CodeArts 直驱，无 resume ID）
 - 本轮已完成（0.2.8）：①长按图标出「开始刷牙 / 开始滴眼药水」，读场景列表（≤4），增删改名随场景流刷新；②点一下冷启动直达运行中计时，与 App 内「开始」同链路；③无课程自动仅倒计时；④计时/暂停中再点只回计时页，不重开、不丢 pendingFinish；⑤真机 8 项 PASS（证据 `docs/qa/evidence-2026-11-13-shortcuts/README.md`）；⑥四机推送 ALL_SUCCESS、同 SHA、已登记台账 §H
@@ -40,7 +40,6 @@
 - 人要拍板（列出来问，不问不许开工）：
   - A｜12T Pro 续播复测结论是否可作首次发布依据。
   - B｜何时做首次发布签收（需逐条核对 AC 并留结论）。
-  - C｜是否授权 commit（main，不 push）。
 - permission_request：无。
 
 ## §3 未完成
@@ -51,12 +50,12 @@
 - 证据：`docs/qa/evidence-2026-11-13-shortcuts/`（00–07 截图 + README）；0.2.5–0.2.7 见 `docs/qa/evidence-2026-11-13/README.md`。
 - 未测/限定：有课程设备的快捷启动续播（12 Pro 无课程）；场景改名未真机单独跑（与增删同链路）；>3 分钟深度 Doze 未实跑；铃声英文文案与震动触感未逐项实测。
 - 登记：0.2.8 已入版本台账 §H 与 `VERSION.md`（commit `756e1715-dirty`）；0.2.6/0.2.7 仍未登记。
-- 阶段复盘（2026-11-13 本机 0.2.8）：新增踩坑 3 条入 `agent.md`；无新 skill 沉淀（机制二评级 C）；自动化 A1 待回「A1」；口令建议只在对话给出；jcp 未 commit/push（等红线授权）；设备锁 `qoder-p069` 已 release；`agent.md` 压到 12.2KB（项目上限内，skill 10KB 目标未达）。
+- 阶段复盘（2026-11-13 本机 0.2.8）：新增踩坑 3 条入 `agent.md`；无新 skill 沉淀（机制二评级 C）；自动化 A1 待回「A1」；口令建议只在对话给出；jcp 已 commit/push main（`a74c823`）；设备锁 `qoder-p069` 已 release；`agent.md` 压到 12.2KB（项目上限内，skill 10KB 目标未达）。
 - 阶段复盘（2026-11-13 早）：S1/S2 已并入 `android-true-device-qa-orchestrator-local-zh` 1.7.0（阶段 0.8/0.9），未分发、未 commit；A1–A3 待回。
 - `docs/review/CODE_REVIEW-2026-11-11.md` 的 21 条 P2/P3 backlog 未动；旧证据见 `docs/qa/evidence-2026-11-11/README.md`。
 - 已知设备问题：MIUI DocumentsUI 卡片需无障碍 ACTION_CLICK；锁屏提醒需「通知→发声权限」；计时中 `uiautomator dump` 无 idle 态；MIUI 抽屉 dump 有旧缓存。
 - 测试工具：「时光流速」默认 1×，非 1× 不写历史；复测「时间不准」前先确认 1×。
-- 代码最后一次 push 到 main 是 `ad70496`（0.2.5 之前）；0.2.5–0.2.8 仍在工作区。
+- 代码已推送 main：`a74c823`（0.2.6–0.2.8 代码、证据与台账入库）；仅 `USER_MODEL_OVERRIDE.md.旧版-2026-11-11` 与 `经验一句话.md` 未跟踪。
 
 ## §4 红线
 
