@@ -55,7 +55,7 @@
 - `docs/review/CODE_REVIEW-2026-11-11.md` 的 21 条 P2/P3 backlog 未动；旧证据见 `docs/qa/evidence-2026-11-11/README.md`。
 - 已知设备问题：MIUI DocumentsUI 卡片需无障碍 ACTION_CLICK；锁屏提醒需「通知→发声权限」；计时中 `uiautomator dump` 无 idle 态；MIUI 抽屉 dump 有旧缓存。
 - 测试工具：「时光流速」默认 1×，非 1× 不写历史；复测「时间不准」前先确认 1×。
-- 代码已推送 main：`a74c823`（0.2.6–0.2.8 代码、证据与台账入库）；仅 `USER_MODEL_OVERRIDE.md.旧版-2026-11-11` 与 `经验一句话.md` 未跟踪。
+- 代码已推送 main：`a74c823`（0.2.6–0.2.8 代码、证据与台账）、`3a61dab`（复盘经验 `经验一句话.md` 入库）；仅 `USER_MODEL_OVERRIDE.md.旧版-2026-11-11` 未跟踪（配置备份，按红线不入库）。
 
 ## §4 红线
 
