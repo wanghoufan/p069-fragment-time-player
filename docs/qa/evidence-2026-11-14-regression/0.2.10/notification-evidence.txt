@@ -1,0 +1,27 @@
+== 到点通知记录（0.2.10 / timer_alert_v3 / 15:45:37 触发）==
+pkg=com.wanghoufan.fragmentplayer user=UserHandle{0} id=6901 tag=null importance=4 key=0|com.wanghoufan.fragmentplayer|6901|null|10398 bbbc=0: Notification(channel=timer_alert_v3 shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x18 color=0x00000000 category=alarm vis=PUBLIC))
+  when=1794642337315
+  seen=false
+  groupKey=0|com.wanghoufan.fragmentplayer|6901|null|10398
+  mImportance=HIGH
+  mIsInterruptive=true
+  mSuppressedVisualEffects= 0
+  mSound= android.resource://com.wanghoufan.fragmentplayer/2131755008
+  mAttributes= AudioAttributes: usage=USAGE_ALARM content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null
+
+== 触发时间核对 ==
+  1794642337315 -> 15:45:37.315
+  1794642337323 -> 15:45:37.323
+  1794642337527 -> 15:45:37.527
+  本轮计时起点 15:43:37（点击「仅倒计时」），名义 120s -> 期望 15:45:37；实测创建 15:45:37.315（+0.3s）
+
+== 到点铃声（应用 pid 10398，USAGE_ALARM）==
+  11-14 15:45:37:330 new player piid:4863 uid/pid:10398/19507 type:android.media.MediaPlayer attr:AudioAttributes: usage=USAGE_UNKNOWN content=CONTENT_TYPE_UNKNOWN flags=0x800 tags= bundle=null session:9601
+  11-14 15:45:37:331 player piid:4863 new AudioAttributes:AudioAttributes: usage=USAGE_ALARM content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null
+  11-14 15:45:37:367 player piid:4863 event:started
+  11-14 15:45:37:438 port updated portId:1099 mapped to player piid:4863
+
+== 锁屏对照实验（同一锁屏，两条不同来源的通知都不可见）==
+  1) 15:46:42 唤醒：锁屏首屏只有「盆底肌语音训练进行中」媒体卡 + 「已连接到 USB 调试」；P069 到点通知不在首屏（60-fored-wake.jpg）
+  2) 15:48/15:49 用 `cmd notification post` 由 shell 发一条对照通知：锁屏首屏同样不显示（70-lock-control.jpg）
+  3) 结论：本机锁屏只展示媒体卡与 USB 常驻通知，其他通知一律不上首屏；属设备/ROM 行为，不能据此判应用缺陷

@@ -1,12 +1,14 @@
 # P069 碎片时间播放器｜回归检查体系 V1.1 首次试运行报告
 
 > 执行日期：2026-11-14（Asia/Shanghai）
-> 执行者：CodeArts（项目开发智能体），按 `003-体系管家/检查体系清单` V1.1 执行
-> 被测版本：`0.2.8(21)`，APK SHA-256 `779c8433bce45045c07d266dfa20d90bf8a46132047c446286a40be41b01814c`
+> 执行者：CodeArts（项目开发智能体），按 `003-体系管家/检查体系清单` V1.1 执行；15:55 起由 OpenCode 接手（§12）
+> 被测版本：**`0.2.10(23)`**（首轮为 `0.2.8(21)`，0.2.9/0.2.10 为同一轮内修复后的候选包）
+> 0.2.10 APK SHA-256 `af913c0177bd0d29722465bc9b7ddd1872e8e3cec016839e585bcf1a7f78d368`，构建 commit `83b11ec`
 > 设备：Redmi Note 12 Pro（22101316C，Android 14 / SDK 34）；接手轮在 Redmi Note 11T Pro+（23054RA19C，Android 15 / SDK 35）补测
-> 证据目录：`docs/qa/evidence-2026-11-14-regression/`
+> 证据目录：`docs/qa/evidence-2026-11-14-regression/`（0.2.10 段见 `0.2.10/README.md`）
 > 结论：**不通过（P0 未全绿）**。当前状态 `LOCAL_TESTED`，不得写 `READY_FOR_USER_ACCEPTANCE` 或 `ACCEPTED_BY_USER`。
 > 接手轮复核（2026-11-14 13:10–13:30）：修正设备与矩阵口径，新增返回键缺陷，门禁探针实测见 §10。
+> 0.2.10 修复轮（14:44–16:00）：到点通知进入 Alerting 分区，锁屏首屏仍不可见但已定性为设备/ROM 行为（§12）。
 
 ## 1. 执行摘要
 
@@ -225,10 +227,10 @@ UI 取证：计时页 `uiautomator dump` 多次返回 `could not get idle state`
 
 | 态 | 事实 | 证据 |
 |---|---|---|
-| 本机可测 | 是；9 轮真机 + Android 15 补测 + 0.2.9 真实课程复测 + 79 单测 | 本报告 §4、§10、§11 |
-| 源码已提交 | 是：`4313599`(docs) + `5cf5842`(0.2.9 修复) + `d654ca5`(docs)；HEAD `d654ca5` | `git log` |
-| 远端已推送 | **否**：本地有未推送提交（`git rev-list --count origin/main..HEAD` 非 0） | `git status`/`git log` |
-| 设备已安装 | **部分**：Note 11T Pro+ 为 **0.2.9(22)**；OPPO、Note 12 Pro 为 0.2.8(21)；Note 11T Pro 为 0.2.7(18) | `logs/device-inventory-2026-11-14.txt`、`VERSION.md` |
+| 本机可测 | 是；9 轮真机 + Android 15 补测 + 0.2.9 真实课程复测 + 0.2.10 通知分区复测 + 79 单测 | 本报告 §4、§10、§11、§12 |
+| 源码已提交 | 是：`4313599`(docs) + `5cf5842`(0.2.9 修复) + `d654ca5`/`5eae0c3`/`90466df`/`84d2f72`(docs) + `83b11ec`(0.2.10 修复)；本轮补交 docs 与 `VERSION.md` | `git log` |
+| 远端已推送 | **否**：`git rev-list --count origin/main..HEAD` 非 0 | `git status`/`git log` |
+| 设备已安装 | **部分**：Note 12 Pro 与 Note 11T Pro+ 为 **0.2.10(23)/0.2.9(22)**；OPPO 与 Note 11T Pro 仍旧版 | `VERSION.md`、`dumpsys package` |
 | 正式已验收 | **否**：AC-08 10 轮/首装等未测，用户未签收 | AC-12 |
 
 **当前允许的表述**：`LOCAL_TESTED`（0.2.9 为待验收候选包）。
@@ -236,12 +238,12 @@ UI 取证：计时页 `uiautomator dump` 多次返回 `could not get idle state`
 
 ## 9. 需要用户拍板
 
-A1/B1/E1 已执行：本地 commit（未 push）、0.2.9 干净构建/登记/装机复测、设备锁重绑。剩余：
+A1/B1/E1 已执行：本地 commit（未 push）、0.2.9 干净构建/登记/装机复测、设备锁重绑。0.2.10 修复与复测见 §12。剩余：
 
-1. **push**：是否把 `main` 上 3 个本地提交推到 origin/main（本轮只授权 commit）。
+1. **push**：是否把 `main` 上的本地提交推到 origin/main（本轮只做 commit，未 push）。
 2. **AC-08 与首装**：是否补每状态 10 轮和首装，或明确接受延期并进入签收。
-3. **通知权限（D1）**：Note 11T Pro+ 允许通知/锁屏/发声/振动全关且勿扰开启；需用户开启后复测到点可见，否则记 BLOCKED。
-4. **真实课程（C1 后续）**：13 节已在目标机并完成播放/断点/锁屏有声；自动下一节与无音轨提示仍缺样本或需长时播放。
+3. **换机复测锁屏可见（新）**：Note 12 Pro 的锁屏不渲染任何第三方通知（含对照通知），需换一台锁屏通知正常的机型，或由用户在本机开启/确认 MIUI「锁屏通知」后再测；否则 AND-007 只能维持 PARTIAL。
+4. **通知权限（D1）**：Note 11T Pro+ 允许通知/锁屏/发声/振动全关且勿扰开启；需用户开启后复测到点可见，否则记 BLOCKED。
 5. 最后由用户逐条签收 AC-12。
 
 ## 10. 接手轮复核（2026-11-14 13:10–13:30）
@@ -405,3 +407,98 @@ P0（适用 108）：PASS 61、PARTIAL 34、FAIL 2、BLOCKED 10、NOT_RUN 1。
 - 构建来源、包身份、设备锁、返回键四项已闭环，证据可复跑。
 - 仍不能写 `READY_FOR_USER_ACCEPTANCE`：AC-08 每状态 10 轮未达、首装未做、无音轨提示未测、用户未签收。
 - 当前状态仍为 `LOCAL_TESTED`；0.2.9 可作为「待用户验收候选包」，但不得称已验收。
+## 12. 0.2.10 到点通知分区修复与锁屏复测（2026-11-14 14:44–16:00，接手轮）
+
+本轮由 OpenCode 接手，接续上一开发者在 14:44 完成的 0.2.10 提交，把「锁屏首屏看不到到点通知」（R22）从
+「只记录缺陷」推进到「修复 + 定性 + 可复核证据」。
+
+### 12.1 根因（已用记录字段证实，不是推测）
+
+0.2.9 的到点渠道 `timer_alert_v2` 自身静音，通知又 `setSilent(true)`，系统把 6901 归入 **Silent 分区**：
+
+```text
+0.2.9（改造前）：channel=timer_alert_v2  sound=null  groupKey=…|silent  mIsInterruptive=false
+```
+
+Android 11+ 锁屏首屏优先展示 Alerting／媒体，Silent 分区不进首屏——这与「权限是否开启」无关，
+所以历史 Note 11 上「打开发声权限后可见」的结论不能外推到 Android 14/15（与 §11.4 判断一致）。
+
+### 12.2 修复
+
+| 项 | 改动 |
+|---|---|
+| 渠道 | `timer_alert_v2` → `timer_alert_v3`；渠道挂 0.1 秒静音 WAV（`res/raw/silence_alert.wav`），音频属性 `USAGE_ALARM` |
+| 通知 | 去掉 `setSilent(true)`，加 `setOnlyAlertOnce(true)` |
+| 兼容 | 创建新渠道时删除旧的 `timer_alert_v2` / `timer_alert`，避免历史渠道残留 |
+| 语义保持 | 真实铃声仍由 `TimerAlertSound` 按用户「到点响铃」开关播放；渠道里的静音音频不发声，不产生叠音，也不改变「关闭响铃」语义 |
+
+代码位置：`app/src/main/java/com/wanghoufan/fragmentplayer/timer/TimerNotifications.kt`。
+
+### 12.3 构建与登记
+
+| 项 | 值 |
+|---|---|
+| versionName / versionCode | 0.2.10 / 23 |
+| 构建 commit | `83b11ece1c765a860b6c958e7518157744cfa485`（功能提交先于构建） |
+| 工作区 | 构建前干净（提交 83b11ec 后无业务改动） |
+| APK | `app/build/outputs/apk/debug/app-debug.apk`，17,929,244 B，debug 签名 |
+| SHA-256 | `af913c0177bd0d29722465bc9b7ddd1872e8e3cec016839e585bcf1a7f78d368` |
+| 登记 | 软件台账 §H 2026-11-14 14:45:06；`VERSION.md` 由脚本重写（本轮补齐提交） |
+| 装机 | Note 12 Pro 覆盖安装 `install -r`，`dumpsys package` 回读 0.2.10(23)，lastUpdateTime 14:45:06 |
+
+### 12.4 回归测试
+
+`./gradlew :app:testDebugUnitTest --rerun-tasks` → **79/79，0 失败 0 错误 0 跳过**（HEAD=`83b11ec`，`EXIT=0`）。
+
+### 12.5 真机证据（Note 12 Pro / Android 14）
+
+| 检查 | 判据 | 实测 |
+|---|---|---|
+| 渠道是否带声音 | `dumpsys notification` 渠道字段 | `timer_alert_v3` importance=4、`mSound=android.resource://…/2131755008`、`USAGE_ALARM`、`mDeleted=false`；`timer_alert_v2` 已 `mDeleted=true` |
+| 通知是否进 Alerting | 记录字段 | `importance=4`、`category=alarm`、`mIsInterruptive=true`、`groupKey=0\|com.wanghoufan.fragmentplayer\|6901…`（不再落 silent）、`mSuppressedVisualEffects=0` |
+| 到点准确性 | 名义 120s | 起点 15:43:37，通知创建 **15:45:37.315**（+0.3s） |
+| 铃声未被改成静音 | 音频子系统 | 同刻 `player piid:4863 … usage=USAGE_ALARM` → `event:started`（15:45:37.367） |
+| 完成页文案（无课程） | countdownOnly 分支 | 前台到点完成页显示「到点完成」，不再写「课程进度已保存」→ 0.2.9 的 PARTIAL 转 PASS |
+| 锁屏首屏可见 | 熄屏到点后唤醒首屏 | **仍不可见**：首屏只有其他 App 媒体卡与 USB 通知 |
+
+**关键对照实验（区分系统行为与应用缺陷）**：在同一锁屏状态下，用 `adb shell cmd notification post` 由系统 shell
+发一条与 P069 无关的对照通知，**该通知同样不上锁屏首屏**。说明本机锁屏只渲染媒体会话卡与 USB 常驻通知，
+其他通知一律不进首屏——这是设备/ROM 行为，不能判成应用缺陷，也不能用来证明应用通过。
+
+证据：`docs/qa/evidence-2026-11-14-regression/0.2.10/`（4 张压缩截图 + `notification-evidence.txt`）；
+原图与原始 dumpsys 在 `.local/qa-0.2.10b/`（本地不入库）。
+
+### 12.6 判定
+
+| 项 | 改前 | 改后 | 依据 |
+|---|---|---|---|
+| R22「通知被归入 Silent 分区」 | 缺陷成立 | **已修** | 记录字段从 silent 分区变为 Alerting（`mIsInterruptive=true`、渠道带声音） |
+| AND-007「屏幕锁定下的实际行为」 | PARTIAL | **PARTIAL（原因改写）** | 应用侧行为已达可判定的最好状态；本机锁屏首屏不展示任何非媒体通知（含对照通知），缺一台锁屏通知正常的机器做正向验证 |
+| AC-03 文案/单次通知 | PARTIAL | **PARTIAL** | 单次通知与铃声 PASS；「双通道不响两次」仍需长时轮次 |
+| AC-08 到点轮次 | 8/10 + 1 轮前台 + 1 轮锁屏 | **同上，未增加达标轮次** | 本轮锁屏轮用于定性，不计入「可见」通过轮次 |
+
+**不允许的表述**：不得写「锁屏首屏已修复」「锁屏可见已通过」。允许的表述是「通知已进入 Alerting 分区，
+应用侧行为正确；本机锁屏不展示该类通知，需换机验证」。
+
+### 12.7 对 V1.1 检查体系的补充（试运行产出，未改中央文件）
+
+1. **对照法应当写进清单**：判断「通知/弹窗在锁屏、勿扰、省电下不出现」是应用缺陷还是系统行为时，先用
+   `cmd notification post` 等**应用外来源**发一条同类通知做对照；本轮的结论完全依赖这条对照，否则会把 ROM 行为误判成产品缺陷。
+2. **锁屏可见性需要「机型前提」字段**：清单应要求记录「本机锁屏是否渲染第三方通知」这一前提，前提不成立时该机不能作为正向验收机。
+3. **通知分区应作为可判定断言**：`groupKey` 是否落 `silent`、`mIsInterruptive`、渠道 `mSound` 三个字段可以直接断言，
+   比「肉眼看锁屏」稳定得多，应替代现有「屏幕锁定下实际行为」的模糊表述。
+
+## 13. 0.2.10 交付门禁复检（8 条，2026-11-14 16:00 现读）
+
+| # | 检验点 | 0.2.10 实测 | 结论 |
+|---|---|---|---|
+| 1 | 构建前源码状态可追溯 | 功能提交 `83b11ec` 先于构建（commit 14:44:27，APK mtime 14:44），该提交同时含 `TimerNotifications.kt` 与 `silence_alert.wav`；构建后无业务文件改动 | PASS |
+| 2 | 构建提交是否真含本次功能 | `git show 83b11ec --stat` 三处：`app/build.gradle.kts`（版本 0.2.10/23）、`TimerNotifications.kt`、`res/raw/silence_alert.wav` | PASS |
+| 3 | 正式验收包是否来自确定源码 | 包由 `83b11ec` 构建并登记；`VERSION.md` 与台账 §H 同一条（2026-11-14 14:45:06） | PASS |
+| 4 | APK SHA-256 是否与实际验收包对应 | `shasum -a 256 app-debug.apk` = `af913c01…d368`，与 `VERSION.md`、台账 §H 逐字符一致；17,929,244 B | PASS |
+| 5 | 本地提交/远端/设备分别记录 | 本地 HEAD `83b11ec`（+ 本轮 docs 提交）；`origin/main` 落后 9 个本地提交，**未 push**；设备：Note 12 Pro 0.2.10(23)，Note 11T Pro+ 0.2.9(22)，OPPO 0.2.8，Note 11T Pro 0.2.7 | PARTIAL（三态已分列，远端未推） |
+| 6 | HANDOFF/VERSION/构建配置/台账冲突 | `build.gradle.kts` 0.2.10/23 = `VERSION.md` = 台账 §H = 设备回读；HANDOFF/矩阵/风险已同批改为 0.2.10 | PASS |
+| 7 | 测试记录是否绑定正确版本 | §12 证据绑定 0.2.10(23)/`af913c01`/Note 12 Pro/时间戳；单测在 HEAD=`83b11ec` 上 `--rerun-tasks` 跑 79/79 | PASS |
+| 8 | 未提交/dirty 构建能否被识别并阻断 | `register-version.mjs` 仍只把 dirty 拼进 commit 标签、不阻断（§10.4 探针：退出码 0）；「同号不同包」有机器门禁（退出码 3） | FAIL（R-028 仍未实现，需用户授权改脚本） |
+
+**净结果**：0.2.8 时代 FAIL 的 1/2/3/6 四条已全部转 PASS；第 8 条是本轮唯一没有解决的交付门禁，属脚本能力缺口，不是本轮构建违规。
