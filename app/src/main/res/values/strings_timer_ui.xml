@@ -70,6 +70,7 @@
     <string name="tui_finished_title">计时完成</string>
     <string name="tui_finished_minutes">本次 %1$d 分钟</string>
     <string name="tui_result_completed">到点完成，课程进度已保存</string>
+    <string name="tui_result_completed_countdown">到点完成</string>
     <string name="tui_result_early">提前结束，已按实际用时保存</string>
 
     <string name="tui_interrupted_title">上次计时被中断</string>

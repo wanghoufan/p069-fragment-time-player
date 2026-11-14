@@ -949,8 +949,11 @@ private fun FinishedSection(
                     )
                     Text(
                         text = stringResource(
-                            if (result.completed) R.string.tui_result_completed
-                            else R.string.tui_result_early
+                            when {
+                                !result.completed -> R.string.tui_result_early
+                                timer.countdownOnly -> R.string.tui_result_completed_countdown
+                                else -> R.string.tui_result_completed
+                            }
                         ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

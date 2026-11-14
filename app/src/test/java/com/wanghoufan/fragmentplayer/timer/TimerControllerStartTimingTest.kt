@@ -139,14 +139,14 @@ class TimerControllerStartTimingTest {
         override val settings: Flow<AppSettings> = MutableStateFlow(AppSettings())
         override val folderUri: Flow<String?> = MutableStateFlow(null)
         override suspend fun current(): AppSettings = AppSettings()
-        override suspend fun setTheme(mode: ThemeMode) = Unit
-        override suspend fun setLanguage(mode: LanguageMode) = Unit
-        override suspend fun setFontScale(scale: Float) = Unit
-        override suspend fun setVibration(enabled: Boolean) = Unit
-        override suspend fun setAlertSound(enabled: Boolean) = Unit
-        override suspend fun setAlertTone(tone: AlertTone) = Unit
-        override suspend fun setTimeFlow(multiplier: Int) = Unit
-        override suspend fun setFolderUri(uri: String?) = Unit
+        override suspend fun setTheme(mode: ThemeMode) = true
+        override suspend fun setLanguage(mode: LanguageMode) = true
+        override suspend fun setFontScale(scale: Float) = true
+        override suspend fun setVibration(enabled: Boolean) = true
+        override suspend fun setAlertSound(enabled: Boolean) = true
+        override suspend fun setAlertTone(tone: AlertTone) = true
+        override suspend fun setTimeFlow(multiplier: Int) = true
+        override suspend fun setFolderUri(uri: String?) = true
         override suspend fun currentFolderUri(): String? = null
     }
 

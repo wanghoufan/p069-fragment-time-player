@@ -72,4 +72,5 @@
     <string name="seu_section_about">关于</string>
     <string name="seu_version">版本 %1$s</string>
     <string name="seu_about_offline">完全离线，不需要网络或账号。</string>
+    <string name="settings_save_failed">设置保存失败，请重试</string>
 </resources>

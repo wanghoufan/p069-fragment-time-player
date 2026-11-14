@@ -1,6 +1,7 @@
 package com.wanghoufan.fragmentplayer.data.settings
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -22,6 +23,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+
+private const val TAG = "SettingsRepository"
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -58,11 +61,12 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
 
     override suspend fun currentFolderUri(): String? = folderUri.first()
 
-    private suspend fun write(block: (MutablePreferences) -> Unit) {
-        try {
-            dataStore.edit { block(it) }
-        } catch (_: IOException) {
-        }
+    private suspend fun write(block: (MutablePreferences) -> Unit): Boolean = try {
+        dataStore.edit { block(it) }
+        true
+    } catch (error: IOException) {
+        Log.e(TAG, "settings write failed", error)
+        false
     }
 
     private fun Preferences.toAppSettings(): AppSettings = AppSettings(

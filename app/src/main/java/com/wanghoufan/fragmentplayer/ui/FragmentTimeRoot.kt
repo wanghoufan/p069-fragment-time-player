@@ -1,5 +1,6 @@
 package com.wanghoufan.fragmentplayer.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wanghoufan.fragmentplayer.R
+import com.wanghoufan.fragmentplayer.core.model.TimerPhase
 import com.wanghoufan.fragmentplayer.ui.components.LocalNavigateToCourses
 import com.wanghoufan.fragmentplayer.ui.screens.CoursesScreen
 import com.wanghoufan.fragmentplayer.ui.screens.SettingsScreen
@@ -70,6 +72,20 @@ fun FragmentTimeRoot(rootViewModel: RootViewModel = viewModel()) {
     FragmentTimeTheme(themeMode = settings.theme, fontScale = settings.fontScale) {
         var selectedTabIndex by rememberSaveable { mutableIntStateOf(RootTab.TIMER.ordinal) }
         val tabs = RootTab.entries
+
+        // 返回键分层：非计时 Tab 先回计时页，完成页回 IDLE，其余交给首页双击退出。
+        val timerViewModel: MainViewModel = viewModel()
+        val timer by timerViewModel.timer.collectAsStateWithLifecycle()
+        BackHandler(
+            enabled = selectedTabIndex != RootTab.TIMER.ordinal ||
+                timer.phase == TimerPhase.FINISHED
+        ) {
+            when (resolveBackAction(selectedTabIndex, RootTab.TIMER.ordinal, timer.phase)) {
+                BackAction.SWITCH_TO_TIMER -> selectedTabIndex = RootTab.TIMER.ordinal
+                BackAction.CLEAR_RESULT -> timerViewModel.clearResult()
+                BackAction.EXIT_GUARD -> Unit
+            }
+        }
 
         val shortcutRequest by rootViewModel.shortcutStartPresetId.collectAsStateWithLifecycle()
         LaunchedEffect(shortcutRequest) {

@@ -47,14 +47,14 @@ interface SettingsRepository {
     val settings: Flow<AppSettings>
     val folderUri: Flow<String?>
     suspend fun current(): AppSettings
-    suspend fun setTheme(mode: ThemeMode)
-    suspend fun setLanguage(mode: LanguageMode)
-    suspend fun setFontScale(scale: Float)
-    suspend fun setVibration(enabled: Boolean)
-    suspend fun setAlertSound(enabled: Boolean)
-    suspend fun setAlertTone(tone: AlertTone)
-    suspend fun setTimeFlow(multiplier: Int)
-    suspend fun setFolderUri(uri: String?)
+    suspend fun setTheme(mode: ThemeMode): Boolean
+    suspend fun setLanguage(mode: LanguageMode): Boolean
+    suspend fun setFontScale(scale: Float): Boolean
+    suspend fun setVibration(enabled: Boolean): Boolean
+    suspend fun setAlertSound(enabled: Boolean): Boolean
+    suspend fun setAlertTone(tone: AlertTone): Boolean
+    suspend fun setTimeFlow(multiplier: Int): Boolean
+    suspend fun setFolderUri(uri: String?): Boolean
     suspend fun currentFolderUri(): String?
 }
 

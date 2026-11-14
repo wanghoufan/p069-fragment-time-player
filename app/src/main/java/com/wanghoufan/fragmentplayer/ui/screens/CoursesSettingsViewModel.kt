@@ -89,34 +89,45 @@ class CoursesSettingsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setTheme(mode: ThemeMode) {
-        viewModelScope.launch { graph.settings.setTheme(mode) }
+        saveSetting { graph.settings.setTheme(mode) }
     }
 
     fun setLanguage(mode: LanguageMode) {
         viewModelScope.launch {
-            graph.settings.setLanguage(mode)
-            applyLanguage(mode)
+            if (graph.settings.setLanguage(mode)) {
+                applyLanguage(mode)
+            } else {
+                postMessage(appContext.getString(R.string.settings_save_failed))
+            }
         }
     }
 
     fun setFontScale(scale: Float) {
-        viewModelScope.launch { graph.settings.setFontScale(scale) }
+        saveSetting { graph.settings.setFontScale(scale) }
     }
 
     fun setVibration(enabled: Boolean) {
-        viewModelScope.launch { graph.settings.setVibration(enabled) }
+        saveSetting { graph.settings.setVibration(enabled) }
     }
 
     fun setAlertSound(enabled: Boolean) {
-        viewModelScope.launch { graph.settings.setAlertSound(enabled) }
+        saveSetting { graph.settings.setAlertSound(enabled) }
     }
 
     fun setAlertTone(tone: AlertTone) {
-        viewModelScope.launch { graph.settings.setAlertTone(tone) }
+        saveSetting { graph.settings.setAlertTone(tone) }
     }
 
     fun setTimeFlow(multiplier: Int) {
-        viewModelScope.launch { graph.settings.setTimeFlow(multiplier) }
+        saveSetting { graph.settings.setTimeFlow(multiplier) }
+    }
+
+    private fun saveSetting(block: suspend () -> Boolean) {
+        viewModelScope.launch {
+            if (!block()) {
+                postMessage(appContext.getString(R.string.settings_save_failed))
+            }
+        }
     }
 
     fun exportTo(uri: String) {
