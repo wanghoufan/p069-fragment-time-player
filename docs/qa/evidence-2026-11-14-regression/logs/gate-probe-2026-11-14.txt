@@ -1,0 +1,30 @@
+发布门禁探针实测｜2026-11-14 13:12 +08:00
+工具：version-registry-local-zh 1.2.0 / register-version.mjs
+全部使用 --dry-run，未写台账、未改 VERSION.md。
+
+【探针 1】同 versionCode 不同 SHA 是否阻断
+命令：
+  node register-version.mjs \
+    --apk .local/qa-regression-2026-11-14/app-debug-0.2.8-vc21-rebuild-clean-76b6b449.apk \
+    --package com.wanghoufan.fragmentplayer --version-name 0.2.8 --version-code 21 \
+    --project . --dry-run
+退出码：3
+输出：
+  ✘ E_DUPLICATE_VERSIONCODE：同号不同包：com.wanghoufan.fragmentplayer 的 0.2.8(21) 已登记过，
+  SHA-256 为 779c8433…814c，本次为 76b6b449…f6cd。
+结论：PASS。同号不同包被机器拒绝，符合 R-003/R-028 的「不可仅靠文件名认包」。
+
+【探针 2】dirty 工作区是否阻断登记
+命令：
+  node register-version.mjs --apk app/build/outputs/apk/debug/app-debug.apk --project . --dry-run
+退出码：0
+输出：= 已登记过，内容一致，本次未重复写入（幂等）
+说明：当前工作区有未提交 docs 改动与 1 个未跟踪文件；脚本幂等路径直接返回 0。
+      脚本源码 140–157 行把 dirty 只拼成 `<commit>-dirty` 标签，690–700 行只输出提示文案，
+      未发现 `--require-clean` 或 dirty 即非零退出的分支。
+结论：FAIL。R-028「发布与版本登记脚本对 dirty 直接 FAIL」当前未实现；
+      只有「同号不同包」这一半是自动门禁，dirty/来源不明仍靠人工识别。
+
+【探针 3】--help 能力面
+可选参数：--apk/--package/--version-name/--version-code/--sha256/--project/--commit/--root/--dry-run/--json
+未提供：--require-clean、--require-commit-contains、--evidence 等来源断言参数。

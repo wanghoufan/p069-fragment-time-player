@@ -1,15 +1,15 @@
 # 架构与构建事实｜069 碎片时间播放器
 
 > 常驻事实位：只放「改代码前必须知道」的稳定事实。踩坑进根 `agent.md`，风险进 `docs/risks.md`，现势进 `docs/handoff/HANDOFF.md`。
-> 最后核对：2026-11-11（Note 11 主验收、AC09 闭环与 0.1.9 最终构建后）。上限 150 行 / 10,240 字节。
+> 最后核对：2026-11-14 13:30（V1.1 回归首跑 + 接手轮设备/矩阵纠偏后）。上限 150 行 / 10,240 字节。
 
 ## 1. 这是什么
 
 - 一句话定位：面向个人英语学习者的「碎片时间播放器」——刷牙 2 分钟、滴眼药水 3 分钟等场景一键从上次位置播放本地英语音视频，同时倒计时；到点停媒体、保存进度、只提醒一次。
 - 交付形态：原生 Android APK（只做 Android；iOS 未做，后续需单独适配）。
-- 部署位置：侧载 APK，包名 `com.wanghoufan.fragmentplayer`；debug 签名，未上架、未登记发版台账。
-- 当前版本：**0.1.9 / versionCode 10 为最终构建，已装 Redmi Note 11 5G**（相对 0.1.8 只清理调试日志与无用组件，未改行为；AC09 由 0.1.8 继承）。历史：0.1.8 / vc9 为 AC09 根级横幅修复版（真机首屏可见）；0.1.3–0.1.7 为 AC09 失败/诊断尝试；0.1.2 / vc3 为 Note 11 本轮主要验收基线；0.1.1 / vc2 已构建未安装；0.1.0 / vc1 已装 OPPO PLG110 完成首轮验收。
-- 真实课程媒体（2026-11-11 新事实）：用户指定 `/Users/zzymima0000/Documents/1第一章：家庭与朋友`，其中仅 1 个完整视频 `5.Bonus Time - No legs or arms.mp4`（54.149s，1080x2344，H.264+AAC，49,677,154 B）；同目录 5 个 `.baiduyun.p.downloading`（约 678M/616M/614M/842M/494M）是未下完临时文件，不可播放、不计课程。该视频已推送手机 `/sdcard/Movies/FragmentLearning/`，增量扫描后共 8 节，列表第 6 项显示 00:54。
+- 部署位置：侧载 APK，包名 `com.wanghoufan.fragmentplayer`；debug 签名，未上架；0.2.8(21) 已登记软件台账 §H（登记 commit 为 `756e1715-dirty`，来源不可签收）。
+- 当前版本：**0.2.8 / vc21**，三台已装（OPPO PLG110、Note 11T Pro+、Note 12 Pro）；Note 11T Pro（21091116AC）仍为 0.2.7(18)。源码提交 `a74c8235`，构建 HEAD `8915d0dd`。**该包为 dirty 出包（出包时 HEAD 756e1715 不含 0.2.8），干净重建 SHA 不同，当前不可作正式验收包**；详见 `docs/qa/regression-2026-11-14-v1.1.md`。历史：0.2.0–0.2.7 见版本台账 §H；0.1.9/vc10 为 Note 11 最终基线（AC09 由 0.1.8 继承）。
+- 真实课程媒体（2026-11-11 新事实）：用户指定 `/Users/zzymima0000/Documents/1第一章：家庭与朋友`，其中仅 1 个完整视频 `5.Bonus Time - No legs or arms.mp4`（54.149s，1080x2344，H.264+AAC，49,677,154 B）；同目录 5 个 `.baiduyun.p.downloading`（约 678M/616M/614M/842M/494M）是未下完临时文件，不可播放、不计课程。该视频已推送手机 `/sdcard/Movies/FragmentLearning/`，增量扫描后共 8 节，列表第 6 项显示 00:54。**2026-11-14 接手轮：四台在连设备 `/sdcard`（maxdepth 3）均未找到 mp3/mp4；Note 11T Pro 的 App 库 courses=0，真实课程链仍 BLOCKED。**
 - V1 完全离线：不依赖 Mac、Wi-Fi/5G、浏览器、账号或云服务。
 
 ## 2. 技术栈与目录
@@ -21,12 +21,11 @@
 | SDK / JVM | compileSdk = targetSdk = 36；minSdk 26；JDK 17（JVM target 17） |
 | 构建命令 | `./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon` |
 | 启动命令 | 无后端；真机 `adb shell am start -n com.wanghoufan.fragmentplayer/.MainActivity` |
-| 测试命令 | `./gradlew :app:testDebugUnitTest --no-daemon`（JVM 单测 21 条） |
+| 测试命令 | `./gradlew :app:testDebugUnitTest --no-daemon`（JVM 单测 76 条，0.2.8 起） |
 | 数据库 | Room 本地库（无云库、无网络） |
-| APK（当前最终构建 0.1.9） | `app/build/outputs/apk/debug/app-debug.apk`；versionCode 10 / versionName 0.1.9；16,513,928 B；SHA-256 `46d2a1cc4dafca834ecc69b42e18bf81b356a93c864aa996da8d05ed2a5503d7`；debug 签名；**已安装 Redmi Note 11 5G** |
-| APK（历史 0.1.8 / AC09 修复版） | versionCode 9；SHA-256 `ba29bdcf9d07c3e6e78f6b04b58971c312b8d322aa684d7a339e4050c94a1f44`；真机验证中断提示首屏可见；0.1.9 继承其行为 |
-| APK（历史 0.1.2 / Note 11 验收基线） | versionCode 3；16,513,928 B；SHA-256 `9e7be169e9067bd588d1b7682951bf01957bd0d6c82cababfd3ea4118c7efdb2`；注意与 0.1.9 字节数相同但哈希不同，认包以 SHA 为准 |
-| APK（历史 0.1.0 / OPPO 首轮） | versionCode 1；16,984,755 B；SHA-256 `450d3587bc3877b404c861e4ff7083fb9bab4bf238bb13d7e17cc47e9050e17f`；已装 OPPO PLG110 |
+| APK（当前 0.2.8 / vc21） | `app/build/outputs/apk/debug/app-debug.apk`；versionCode 21 / versionName 0.2.8；17,926,541 B；SHA-256 `779c8433bce45045c07d266dfa20d90bf8a46132047c446286a40be41b01814c`；debug 签名；三台已装（Note 11T Pro 仍 0.2.7）；**dirty 来源，不可签收** |
+| APK（0.2.8 干净 HEAD 复核包） | `.local/qa-regression-2026-11-14/app-debug-0.2.8-vc21-rebuild-clean-76b6b449.apk`；SHA-256 `76b6b4492a923b96c0637ec5d692a902c1cd17aef680a2f03b201cd39c77f6cd`；从 HEAD `8915d0dd` 重建；同 vc 不同 SHA，仅作复核证据 |
+| APK（历史 0.1.9 / vc10） | 16,513,928 B；SHA-256 `46d2a1cc4dafca834ecc69b42e18bf81b356a93c864aa996da8d05ed2a5503d7`；Note 11 最终基线 |
 | 插件 | Kotlin Android / Compose / Serialization、KSP、androidx.room schema 导出到 `app/schemas` |
 
 | 路径 | 职责 |
@@ -39,7 +38,7 @@
 | `.../playback/` | Media3 `PlaybackService`（MediaSessionService）与播放引擎 |
 | `.../timer/` | 计时状态机、前台服务、闹钟/开机接收器、通知与去重 |
 | `.../ui/` | Compose 根装配、ViewModel、三页（计时/课程/设置）、主题 |
-| `app/src/test/` | BackupCodec 5、Fingerprint 4、NaturalSort 5、TimerEngine 7（共 21） |
+| `app/src/test/` | 14 个测试类共 76 条：BackupCodec、Fingerprint、NaturalSort、TimeFlowMath、TimeFlowHistory、AlertPolicy、AlertToneResources、PlaybackHoldPolicy、ShortcutStart、ExitBackGuard 等 |
 | `docs/qa/evidence-2026-11-11/` | 本轮真机验收索引（截图在 `build/qa/`，不入库） |
 
 ## 3. 数据模型与后台组件
@@ -75,9 +74,9 @@
 
 ## 6. 验证与门禁
 
-- 本地自测：`./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon`（0.1.0、0.1.1、0.1.2、0.1.8、0.1.9 均 21/21 通过；0.1.9 同命令构建 vc10）。
+- 本地自测：`./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon`；2026-11-14 强制重跑 **76/76**（14 类，0 失败）。历史 0.1.x 为 21/21；0.2.3 起 25、0.2.6 起 64、0.2.7 起 71、0.2.8 起 76。
 - 独立审查：`docs/review/CODE_REVIEW-2026-11-11.md`（有条件通过，0 P0 / 4 P1 / 21 P2+P3）；P1 静态复核 `docs/review/CODE_REVIEW-P1-VERIFY-2026-11-11.md`（P1-1～P1-4 全 CLOSED，无新增 P0/P1；未构建、未真机）。
 - 记账后与收工前：`node scripts/model/check-ledger.mjs docs/model`，须 `LEDGER-OK`。
-- 真机基线：Redmi Note 11 5G（21091116AC，Android 11 / SDK 30，媒体音量 8，通知可用，精确闹钟在 Android 11 无需权限）；OPPO PLG110（Android 17 / SDK 37）为历史首轮基线，当前仍装 0.1.0。
-- 已知不稳定 / 未验证：真实课程仅 1 个完整视频（其余 5 个为百度网盘未下完临时文件）；AC08 仅 6/10（前台/后台/锁屏各 2 轮，非每状态 10 轮）；锁屏通知画面可见性未截到；备份 JSON 经系统 UI 导入未测；AC02/05/07/10 部分或未测；勿扰与 OEM 省电未测；debug 签名不可发布；AC12 未签收。
+- 真机基线：**Redmi Note 12 Pro（22101316C，Android 14 / SDK 34，SCHEDULE_EXACT_ALARM=deny）为 2026-11-14 回归机**；同轮接手在 **Redmi Note 11T Pro+（23054RA19C，Android 15 / SDK 35）** 补首屏/安全区；历史 Note 11 5G（Android 11 / SDK 30，精确闹钟无需权限）、OPPO PLG110（Android 17 / SDK 37）、Note 11T Pro（21091116AC，Android 11，装 0.2.7）。
+- 已知不稳定 / 未验证：真实课程素材四台在连设备均未找到（Note 11T Pro 库内 courses=0），播放/断点/锁屏有声 BLOCKED；AC08 仅 8/10（本轮再补 1 轮，仍非每状态 10 轮）；锁屏首屏未见通知、下拉可见（Note 11T Pro+ 通知权限四项全关）；精确闹钟未授权；勿扰与 OEM 省电未测；**返回键无页面栈（完成页/设置页/计时中按返回不回上一级，P1 未修）**；debug 签名不可发布；AC12 未签收；现包 dirty 不可签收。
 - 设备踩坑：MIUI DocumentsUI 文件夹卡片对 `input tap` 无响应，须用 UiAutomator 无障碍 ACTION_CLICK（`PickFolderTest` 已完成目录选择）；测试 APK 用完须卸载，避免与主 App 双进程干扰。

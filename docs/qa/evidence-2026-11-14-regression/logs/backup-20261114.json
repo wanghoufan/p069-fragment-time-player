@@ -1,0 +1,241 @@
+{
+    "version": 1,
+    "exportedAt": 1794630227885,
+    "settings": {
+        "theme": "LIGHT",
+        "language": "FOLLOW_SYSTEM",
+        "fontScale": 1.15,
+        "vibration": true,
+        "alertSound": true,
+        "alertTone": "CHIME",
+        "folderUri": null
+    },
+    "presets": [
+        {
+            "id": 1,
+            "name": "刷牙",
+            "durationSec": 120,
+            "sortOrder": 0
+        },
+        {
+            "id": 2,
+            "name": "滴眼药水",
+            "durationSec": 180,
+            "sortOrder": 1
+        }
+    ],
+    "courses": [],
+    "checkpoint": null,
+    "sessions": [
+        {
+            "id": 21,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794629883791,
+            "endedAt": 1794630003878
+        },
+        {
+            "id": 20,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794629664037,
+            "endedAt": 1794629784414
+        },
+        {
+            "id": 19,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 70,
+            "completed": false,
+            "startedAt": 1794629530212,
+            "endedAt": 1794629621541
+        },
+        {
+            "id": 18,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794629323195,
+            "endedAt": 1794629443389
+        },
+        {
+            "id": 17,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794548609496,
+            "endedAt": 1794548729731
+        },
+        {
+            "id": 16,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794546890323,
+            "endedAt": 1794547010747
+        },
+        {
+            "id": 15,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794543428079,
+            "endedAt": 1794543608273
+        },
+        {
+            "id": 14,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794543178504,
+            "endedAt": 1794543358651
+        },
+        {
+            "id": 13,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794542917731,
+            "endedAt": 1794543098071
+        },
+        {
+            "id": 12,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794542691871,
+            "endedAt": 1794542872152
+        },
+        {
+            "id": 11,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794541302378,
+            "endedAt": 1794541482824
+        },
+        {
+            "id": 10,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 600,
+            "listenedSec": 600,
+            "completed": true,
+            "startedAt": 1794540340477,
+            "endedAt": 1794540940735
+        },
+        {
+            "id": 9,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 600,
+            "listenedSec": 600,
+            "completed": true,
+            "startedAt": 1794539308854,
+            "endedAt": 1794539909229
+        },
+        {
+            "id": 8,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794538808341,
+            "endedAt": 1794538988713
+        },
+        {
+            "id": 7,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794538582009,
+            "endedAt": 1794538762254
+        },
+        {
+            "id": 6,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794537938493,
+            "endedAt": 1794538118633
+        },
+        {
+            "id": 5,
+            "presetId": 2,
+            "presetName": "滴眼药水",
+            "targetSec": 180,
+            "listenedSec": 180,
+            "completed": true,
+            "startedAt": 1794537693474,
+            "endedAt": 1794537873615
+        },
+        {
+            "id": 4,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794536673806,
+            "endedAt": 1794536793875
+        },
+        {
+            "id": 3,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794536484840,
+            "endedAt": 1794536604958
+        },
+        {
+            "id": 2,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794536248643,
+            "endedAt": 1794536368970
+        },
+        {
+            "id": 1,
+            "presetId": 1,
+            "presetName": "刷牙",
+            "targetSec": 120,
+            "listenedSec": 120,
+            "completed": true,
+            "startedAt": 1794536109140,
+            "endedAt": 1794536229239
+        }
+    ]
+}

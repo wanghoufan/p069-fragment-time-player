@@ -1,0 +1,280 @@
+﻿id,priority,stage,applies,status,reason,check,evidence_ref
+G-001,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,产品计划 V1.1 §1 已写明用户任务链（点开始→续播→倒计时→到点提醒）,用一段话明确“用户为什么打开这个产品、要在几秒内做什么、最终得到什么”；不能仅列技术模块。,docs/plan/P069-Fragment-Learning-Product-Plan-V1.1.md §1
+G-002,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,产品计划 §3/§8 的 AC 覆盖刷牙/滴眼/离线/锁屏/中断/恢复等真实场景,列出 3–8 条真实使用场景：首次、日常、长期、大数据、离线、失败、换机/恢复及退出；不从开发者视角编故事。,docs/plan/P069-Fragment-Learning-Product-Plan-V1.1.md §3/§8
+G-003,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,选型已由产品计划冻结（原生 APK），本轮未重做方案比较。,比较不开发/自动化/HTML/Web/PWA/APK/桌面方案的成本、可行性、离线能力、分发难度与真实设备限制。,docs/qa/evidence-2026-11-14-regression/README.md
+G-004,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,范围沿用 V1.1，未重新冻结/签收。,锁定首版的“必须有、明确不做、稍后再做”；凡“明确不做”涉及真实需求的关键体验须核实，不得靠开发者擅自砍掉。,docs/qa/evidence-2026-11-14-regression/README.md
+G-005,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,主流程已走通倒计时/结束/备份；课程播放链未测。,拟定从首次打开到结果/保存/导出/恢复的端到端流程；每一环都明确责任页面或服务。,docs/qa/evidence-2026-11-14-regression/README.md
+G-006,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,检查项目已有代码、原型、CHANGELOG、SPEC/PLAN/TASKS、风险、HANDOFF、测试、当前版本和真实部署，而不是从零重做。,docs/qa/evidence-2026-11-14-regression/README.md
+G-007,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,先读取项目 `AGENTS.md` 及对应中央 SOP；区分项目特例和全局约定，冲突必须说明。,docs/qa/evidence-2026-11-14-regression/README.md
+G-008,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,25 套模板逐套核对：9 套有交集并给出采用/借鉴/不适用理由，16 套无交集。,查询已有 25 套成熟 UI/UX 模板，标出采用/借鉴/不适用理由；不把“找到模板”误认“已经验收”。,docs/qa/evidence-2026-11-14-regression/logs/design-template-review.md
+G-009,P1,2. 开工前：通用项目与环境预检（G）,是,PASS,中央登记 133 条、QA orchestrator 1.7.0 部署 11/11 已核对；本轮实跑 device-lock、QA orchestrator、register-version。,查询中央 Skill 登记、实际部署端、Skill Manager 状态，选择已有成熟 Skill；先判断现有 Skill 能否扩项，不重复新建。,docs/qa/evidence-2026-11-14-regression/logs/skill-check-2026-11-14.md
+G-010,P0,2. 开工前：通用项目与环境预检（G）,是,BLOCKED,真实课程与 12T Pro 设备不可达；其余依赖已就绪。,关键依赖一次性预检：源码仓与权限、GitHub、Vercel/Cloudflare/国内云、域名/DNS/ICP备案、数据库、模型 Key/余额、真实设备、ADB、付费/授权。,docs/qa/regression-2026-11-14-v1.1.md §4
+G-011,P0,2. 开工前：通用项目与环境预检（G）,N/A,N/A,无新增域名/账号等可替代依赖。,正式域名、最终图标、非关键账号暂缺时能否使用临时可行路径推进；不得把可替代项误设硬阻塞。,
+G-012,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,确定首版真正目标设备和系统：Android 机型/版本/WebView、国产自带浏览器、桌面 OS、屏幕宽度；不默认 Chrome 或开发机即目标环境。,docs/qa/evidence-2026-11-14-regression/README.md
+G-013,P0,2. 开工前：通用项目与环境预检（G）,是,FAIL,实测锁绑定 model=23054RA19C（Note 11T Pro+）却标为 Redmi Note 12T Pro；上一轮测试机 22101316C 不在锁内且未 release。,锁定可用设备的独占/借用安排，同一工作区仅一名主开发智能体；真机共用需设备锁。,
+G-014,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,确定数据权威源：IndexedDB/Room/SQLite/共享云；字段/备份/同步/隐私/断网行为先于实现写清。,docs/qa/evidence-2026-11-14-regression/README.md
+G-015,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,VERSION/台账/应用内/架构事实四口径不一致（构建 commit 与版本状态），见 R-002 FAIL,统一定义版本真源及派生值、部署方式、发布物、签名/包名、回滚方式；不得出现多本互斥版本账。,docs/qa/regression-2026-11-14-v1.1.md §3.2
+G-016,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,对新权限逐项说明必要性：相机/麦克风/录音/后台/网络/文件/通知；能不申请就不申请。,docs/qa/evidence-2026-11-14-regression/README.md
+G-017,P0,2. 开工前：通用项目与环境预检（G）,是,BLOCKED,真实课程素材仅存在于用户自用 Note 12T Pro（当前离线），本机无可授权真实样本；未用合成样本冒充。,先做真实数据样本与假数据边界（中文/英文、超长、空字段、异常编码、时间/单位），不只用 3 条演示数据验证。,docs/qa/regression-2026-11-14-v1.1.md §4
+G-018,P1,2. 开工前：通用项目与环境预检（G）,N/A,N/A,纯离线 App，无模型调用/云库/对象存储/定时任务等付费项。,预算评估：模型调用、云数据库、对象存储、定时任务和第三方 API 预计上限、异常熔断、免费额度耗尽的降级。,
+G-019,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,形态/范围/权限/不做项已由产品计划 V1.1 集中确认,用户需要的一次性决策集中确认：产品形态、关键功能边界、设计方向、收费/权限/不可逆操作；不每做一步再问。,docs/plan/P069-Fragment-Learning-Product-Plan-V1.1.md §1/§5
+G-020,P1,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,形成按用户任务排序的验收矩阵（AC 编号、输入、操作、预期、平台、证据、状态），不仅列功能名。,docs/qa/evidence-2026-11-14-regression/README.md
+G-021,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,确认本轮不是“只做 Demo”：交付目标是可真实使用；原型、Mock、假数据、待接 API 分别明确标注。,docs/qa/evidence-2026-11-14-regression/README.md
+G-022,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,备份导入前自动写恢复快照，但未做磁盘级备份。,检查已有数据/服务/源码是否会被覆盖、迁移、删除，先备份并取得相应授权；不能直接重建生产库。,docs/qa/evidence-2026-11-14-regression/README.md
+G-023,P1,2. 开工前：通用项目与环境预检（G）,是,NOT_RUN,无服务性能目标。,设定性能/容量目标（启动、处理量、耗时、并发、存储），依据真实需求选可测数值，不硬编“500 人 200ms”。,
+G-024,P1,2. 开工前：通用项目与环境预检（G）,是,NOT_RUN,范围未变。,明确每一项“后续再做”是否真正非核心；会破坏主流程（如计次数据模型/历史/统计/备份）的一律前移。,
+G-025,P0,2. 开工前：通用项目与环境预检（G）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,不重复造审批链、任务真相源或治理文档：沿用项目既有协作模式（ORCA 或唯一主开发者），未经授权不互相替换。,docs/qa/evidence-2026-11-14-regression/README.md
+G-026,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,未逐张复评设计模板，仅沿用既有页面。,采用成熟 UI 模板前，重新比对模板版本/源文件 SHA、实际截图、用户最新签收与否决项；资产在模板上次审查后改变，必须重评，不继承旧 A 级结论。,docs/qa/evidence-2026-11-14-regression/README.md
+G-027,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,architecture-facts §4 有 P040/P051/P067/P068 复用边界，但未逐条重评旧规则,对所有跨项目复用的旧规则逐条检查是否仍适用于本产品；后续用户明确决定优先于旧原型/历史模板（例如 P043 不再限制交付张数）。,docs/architecture-facts.md §4
+G-028,P1,2. 开工前：通用项目与环境预检（G）,N/A,N/A,Skill 已在 codeartsdoer 端实际加载并执行（见 005-Skill 管家/使用台账.jsonl）；未核其他端。,选中 Skill 后分开记录中央登记、Skill Manager 启用、目标 Agent 文件一致、会话内可发现、实际触发运行结果；缺最后两层不得报“Skill 已验证可用”。,
+G-029,P1,2. 开工前：通用项目与环境预检（G）,是,NOT_RUN,无第三方组件新增。,成熟 UI/组件/第三方 Skill 复用前校验维护日期、来源、许可证、供应链/安全、依赖与兼容性；不能因为样式好看直接引用失维护/无授权资源。,
+G-030,P0,2. 开工前：通用项目与环境预检（G）,是,PARTIAL,产品计划 V1.1 是顾问交接稿，未获用户正式签收；范围按它执行但不算已批准基线,新版本需求/原型/验收 AC 均以用户原话与正式签收为基线；逐条标识继承、变更、取消、待确认，不从旧需求或项目名推定当前范围。,docs/plan/P069-Fragment-Learning-Product-Plan-V1.1.md 头部
+UX-001,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,首屏回答“现在是什么状态／下一步怎么做／是否异常”，把主要内容放在第一屏，不铺说明卡。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-002,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,一个页面一个主任务；3–5 个底部 Tab 已存在时不再重复放指向同级 Tab 的大卡片或按钮。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-003,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,全局导航精简到使用任务，Tab 命名用用户语言；沉浸播放/拍照页隐藏底栏，退出正确恢复。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-004,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,设置页/首页长滚动实测：底部导航固定，正文未被遮挡,导航栏、播放栏、底部操作区不随内容滚没，也不盖住正文；无莫名整行按钮与大片空白。,docs/qa/evidence-2026-11-14-regression/screens/23-settings.png
+UX-005,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,主页面关键内容首屏可见；中文、英文并列阅读场景不要求来回切页或翻找。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-006,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,文案均为面向用户的日常语言，不能露出 AC/FR、Task、Mock、内部代理、API 细节或开发测试按钮。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-007,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PARTIAL,仅目标机型 1080×2400 实测。,响应式在目标宽度实测：390px、480px、980px 与实际设备；横向溢出、截字、芯片压扁、按钮出屏均为 FAIL。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-008,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,手机正文基准不少于 15px（以实际可读性再验），儿童/老人场景建议 19px 起；桌面表格可单独密度优化。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-009,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,触控目标以 44–48dp/px 级别为基准并实测相邻按钮误触；单击、长按、滑动符合自然预期。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-010,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,浅色、深色、跟随系统三态如被支持应完整实现；按本用户使用偏好**首次打开默认浅色**，后续尊重用户选择并持久化。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-011,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,主题不仅改背景，还覆盖卡片、图表、表单、弹窗、错误态、空态与启动瞬间；无白闪与强制深色压暗。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-012,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,NOT_RUN,未做三方向评审。,不同设计方向需在布局、密度、字体、图标、留白、组件而非只换颜色上产生实际区别；方向确定后冻结。,
+UX-013,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,当前状态有明显反馈：开始/暂停/结束、上传中、识别中、已保存、同步中、冲突、无数据。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-014,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PARTIAL,覆盖无课程/空课程/备份确认/中断；未覆盖网络类。,加载、空、错误、离线、保存中、冲突各有用户可操作的路径；不自动刷新丢用户输入。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-015,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,删除/覆盖/清空、批量操作显示影响条数与范围，有确认或撤销；示范数据和真实数据不混删。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-016,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,表单新增/编辑支持必要字段、默认值、格式错误、保存失败保留草稿；不能点保存后无反馈。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-017,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,NOT_RUN,无搜索筛选。,搜索/分类/排序组合不互相冲掉，切 Tab/返回保留筛选与位置；空结果给下一步操作。,
+UX-018,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,NOT_RUN,无分栏。,列表详情一进一出返回正确，不回顶、不丢选中；窄屏分栏折叠有可见返回按钮。,
+UX-019,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PARTIAL,中文长文本正常；未做超长英文/超大数字压力样本。,设计时先列真实内容长度：长姓名、英文地名、双语、错误信息、空图、超大数字、日期；不在小屏截断关键内容。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-020,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,N/A,N/A,无图表/KPI。,图表有标题、单位、分母、刻度、时间范围、数据来源/更新时间；动态参数变化会同步改变图表、KPI 与正文说明。,
+UX-021,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,状态均有文字（仅倒计时/计时完成/未允许），不只靠颜色；浅色深色截图对照,颜色不是唯一状态信号，同时有文字或形状；浅色高对比可在墨水屏清楚辨认。,docs/qa/evidence-2026-11-14-regression/screens/07-finished.png、27-theme-light.png
+UX-022,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,新增/编辑场景对话框键盘弹出后整体上移，保存按钮实测可点,键盘弹出时输入框、保存按钮、底栏、详情不被盖；横竖屏和系统手势区不遮内容。,docs/qa/evidence-2026-11-14-regression/screens/36-add-preset-filled.png
+UX-023,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,不用无法发现的隐藏手势完成关键任务，如长按解锁/隐藏退出；必要操作有明确入口。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-024,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PARTIAL,本轮无课程，媒体控件未出现。,图片/视频/音频都有加载、播放、暂停、停止和失败反馈；媒体主界面不被参考小窗/工具条占用。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-025,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,设置按外观、提醒、权限、数据分组，危险区在底部；开关立即生效，失败回滚。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-026,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,用户已签收的主交互不能被 Builder 自主改动；实现界面与已确认原型逐屏对比。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-027,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,NOT_RUN,无首次引导。,首次引导简短、可跳过或继续，权限说明写用途，失败重试保留已完成步骤。,
+UX-028,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,PREPARING 阶段显示递减倒计时与取消入口，无静止假死,启动、等待、结束不出现让人误以为死机的长时间静止；需要进度、阶段或超时解释。,docs/qa/evidence-2026-11-14-regression/screens/03-running-t1.png
+UX-029,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,NOT_RUN,无 HTML 原型。,所有 UI 原型按“真实可点击”验收；静态壳、依赖缺失模块、截图模仿必须标识。,
+UX-030,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,设置按提醒/权限/外观/语言/备份分组，无广告式或跨 Tab 冗余入口,导航卡、帮助、设置和广告式冗余说明是否可以删除？保留每块必须能回答用户问题。,docs/qa/evidence-2026-11-14-regression/screens/23-settings.png
+UX-031,P1,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PARTIAL,原生 App，无 Web 焦点测试；触控尺寸按 48dp 抽查。,有 Web/触屏操作的界面按 WCAG 2.2 核对焦点可见性、标签、输入提示、键盘/触控；W3C 2.5.8 AA 指针目标基准为 24×24 CSS px（有例外），本产品面向手机的 44–48px/dp 是更高的 UX 设计目标，不混称强制 WCAG 数值。,docs/qa/evidence-2026-11-14-regression/README.md
+UX-032,P0,3. UI/UX：开发前与每轮修改后必须回归（UX）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,每个设置开关/选项必须“写后读回并改变真实行为”，不能只有状态赋值却无人消费；覆盖重新进入、重启、旧版本升级和冲突优先级。,docs/qa/evidence-2026-11-14-regression/README.md
+WEB-001,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,首页、详情、列表、搜索、编辑、设置等所有实际路由可直接访问/刷新，链接不指向已停用站点。,
+WEB-002,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,部署构建与本地构建一致，`404/500` 有可理解反馈；没有空白加载壳。,
+WEB-003,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,桌面、手机、平板布局按最小宽度验证，不出现横向溢出、整页超长堆砌、遮挡。,
+WEB-004,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,所有表单按键与数据操作真实落地，刷新后状态如约保留，不是单纯 `alert('成功')`。,
+WEB-005,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,搜索/分页/排序/筛选在空、少、多数据以及中文/英文情况下正确组合。,
+WEB-006,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,链接与图片源真实有效；外部 URL 失效有兜底；不批量把404图片发布上站。,
+WEB-007,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,业务数据/README/作品卡片统计只从一个真源生成，数目和分类一致；禁止多处手抄。,
+WEB-008,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,数据随参数变化时，标题、正文、图表和导出内容同步重算；避免“计算变了、介绍文案没变”。,
+WEB-009,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,日期、时区、单位、货币、相对时间显示与真实业务地区一致，不出现 -8 小时快照漂移。,
+WEB-010,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,手机直接访问不要求装 Chrome 或特殊浏览器；对目标浏览器关键功能进行真实操作。,
+WEB-011,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,网络断开、API 超时、403、429、500、返回空/坏 JSON 均有解释与恢复手段。,
+WEB-012,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,长表/看板的导出、下载、打印布局适用，不带 UI 控件或内部调试信息。,
+WEB-013,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,Token/密钥/数据库管理凭据不在客户端 bundle、HTML、Source Map、浏览器存储可读。,
+WEB-014,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,登录/会话（若实际需要）经刷新、过期、退出、重新登录、权限拒绝验证；不为本地单用户工具平白加入登录。,
+WEB-015,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,可访问性：表单标签、焦点顺序、Esc/Enter、状态文字、颜色对比和键盘操作不阻断主要任务。,
+WEB-016,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,CI 不仅构建，还执行核心单测、路由、数据数量与关键业务不变量；失败禁止宣告已发布。,
+WEB-017,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,JS 加载/依赖缺失时有错误与重试，而不是启动壳白屏；不把可显示静态内容说成可操作。,
+WEB-018,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,线上 HTTPS、资源缓存、服务端响应头按业务需要正确；域名/DNS/环境变量均实际核实。,
+WEB-019,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,内容站的空白页、孤儿详情页、死按钮、重复入口、过时对外能力声明全部清理。,
+WEB-020,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,内部管理后台的图表/表格具有真实来源、单位、刷新时间、筛选与异常说明，不用固定假数字糊弄。,
+WEB-021,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,若存在多人账号或私有数据，服务端必须独立校验身份与资源级授权；用另一个账号/角色直接访问他人的 ID、下载地址、导出接口，应被正确拒绝；前端隐藏按钮不算隔离。,
+WEB-022,P0,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,对用户输入、URL 参数、富文本、CSV 与上传媒体实施校验/输出编码；涵盖 XSS、注入、恶意文件、路径穿越与恶意回调，不把返回 200 当安全通过。,
+WEB-023,P1,4. 普通网页 / Web 服务（WEB）,N/A,N/A,非 Web 产品。,在低速移动网络、资源缺失、API 慢响应、长列表和较大真实数据集上检验首屏可用、渐进反馈和资源上限；性能标准应基于项目场景实际测量。,
+PWA-001,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,明确是原生 PWA、普通书签快捷方式还是 Android 壳；不能把“加了图标”说成离线 PWA。,
+PWA-002,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,`manifest` 真正由页面引用，`start_url`、`scope`、显示模式、图标、名称、主题色与站点位置一致。,
+PWA-003,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,在**小米、红米、OPPO 自带浏览器**中验证打开和“添加到桌面”/等效入口，记录各浏览器实际支持、步骤与结果；Chrome 通过不能替代。,
+PWA-004,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,从桌面图标冷启动后到正确首页，非普通破损 URL；返回、退出、再次进入行为合理。,
+PWA-005,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,断网冷启动后，核心既存记录/页面/本地资源仍可访问；离线不依赖 Mac mini 家里 Wi-Fi。,
+PWA-006,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,本地写入后重启、清理后台、手机重启仍保存；浏览器清除网站数据时说明会丢失什么。,
+PWA-007,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,Service Worker 缓存的入口、JS/CSS、字体、图标、关键静态资源完整，预缓存路径真实存在。,
+PWA-008,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,更新服务端后客户端能发现新版本；新旧缓存不混用导致白屏、旧页或部分功能失败。,
+PWA-009,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,更新不自动覆盖正在编辑的草稿；“新版本可用”提示与主动刷新方案符合使用情境。,
+PWA-010,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,导出/导入的文件在原生浏览器和桌面快捷方式模式可被选取、下载、恢复。,
+PWA-011,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,离线新增/修改/删除/搜索/排序/时间线可用，云同步只是增强时不阻断本地主流程。,
+PWA-012,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,相机/麦克风/分享 API 使用前做 capability detection，不受支持时明确降级，不能误装无功能壳。,
+PWA-013,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,目标旧版 WebView/浏览器 CSS 有 `vh` 对 `svh` 等兼容回退、`color-mix` 失败处理。,
+PWA-014,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,页面状态栏/安全区/软键盘/地址栏收起时不遮底栏，滚动区计算正确。,
+PWA-015,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,中英文桌面名称、图标与语言选择一致；不能桌面图标名字是另一语言或旧项目名。,
+PWA-016,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,大容量本地数据/IndexedDB 升级迁移有兼容测试；结构升级不会清空现有记录。,
+PWA-017,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,若使用 Capacitor/Android 壳，确认打包的是最新 `dist`，壳内资源与最终构建哈希一致。,
+PWA-018,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,断网缓存过期/信息流过时有明确“数据更新时间”提示，不能用旧活动当今天有效活动。,
+PWA-019,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,以用户需要的分享路径测试：复制链接→朋友手机自带浏览器打开→访问主功能，不强迫下载 APK。,
+PWA-020,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,本地备份与云同步分开定义；同步误删、浏览器数据清除后有独立恢复路线。,
+PWA-021,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,将“浏览器可以安装/创建桌面入口”与“离线真正可用”分成独立验收：manifest、HTTPS/localhost 与安装行为按浏览器测，Service Worker 与缓存另做断网冷启动；不把桌面图标当离线保证。,
+PWA-022,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,针对目标国产自带浏览器逐一记录安装/创建快捷方式能力与系统菜单实际入口；不假设可触发 beforeinstallprompt。确实不支持必需的“添加到桌面”时列 BLOCKED/FAIL 与替代方案，不得拿 Chrome 通过冒充。,
+PWA-023,P0,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,在多个浏览器标签/已安装窗口同时开启、仍有未保存草稿、Service Worker waiting/activate 和新旧缓存交错时做 V1→V2 更新；不得强制自动刷新或使前一版数据迁移失败。,
+PWA-024,P1,5. PWA / 浏览器安装到桌面（PWA）,N/A,N/A,非 PWA/浏览器安装产品，交付形态为原生 Android APK。,模拟网站数据被系统/用户清理、存储空间不足、长期离线或旧浏览器存储限制，验证提示、导出提醒与独立备份恢复；不把 Service Worker 缓存当永久备份。,
+AND-001,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,软件包名/applicationId 稳定，正式安装包可在目标设备升级覆盖，不误装成第二个 App。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-002,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,versionName、versionCode、界面“关于”、VERSION、文件名与包内元数据一致。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-003,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,构建来自 HEAD 可追溯，但工作区有未跟踪配置备份，且重建 SHA 不同；不能签收。,构建来自明确干净 commit；记录 APK SHA-256、构建时间、签名证书指纹；不拿 dirty 包签收。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-004,P0,6. Android 原生 APK / WebView 壳（AND）,是,FAIL,设备锁标签与物理机型不一致，上一轮测试机不在锁内；未做到精确锁定目标设备。,用 `adb -s <设备ID>` 精确锁定目标设备；同机多智能体串行持锁，测试前核查前台应用归属。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-005,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,首次安装未做（卸载会丢 21 条历史）；本轮仅冷启动/重启/强停，未做覆盖升级。,首次安装、冷启动、首次授权、拒绝授权、重启、覆盖升级、重新打开均在真实机操作。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-006,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,目标设备的 Android 版本、厂商 ROM、WebView 引擎版本/兼容性明确；不用开发机模拟器替代实际验收。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-007,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,通知发出与下拉可见 PASS；锁屏首屏不可见；Note 11T Pro+ 上允许通知/锁屏/发声/振动全关。,通知权限与提醒渠道已验证：允许、拒绝、静音、勿扰、振动/铃声、屏幕锁定下的实际行为。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-008,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,倒计时/录音/播放跨前台、后台、锁屏、来电、耳机拔插、系统回收行为明确，能恢复或按设计停止。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-009,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,暂停、继续、结束、取消、中途退出、完成时提醒、误触返回各有明确定义；结束后历史记录不重复、不丢失。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-010,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,强制结束进程、断电重启、低电量/省电模式下的数据保存与计时策略符合承诺；无法保证的限制明确说明。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-011,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,本轮未测试输入法切换；场景名称输入框实测键盘不遮保存按钮。,输入法打开/切换语言时控件不被盖住，输入中挂起回来不丢草稿。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-012,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,Android 14 安全区 PASS；Android 15 仅补首屏与安全区，未做手势/横屏全矩阵。,Android 15+ edge-to-edge、安全区、刘海、状态栏、导航手势与横屏边界在目标机测试。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-013,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,三态切换与持久化 PASS；首装默认仍 SYSTEM，用户未拍板浅色。,主题、字体缩放、系统深色、强制压暗、动态色不破坏可读性；首装浅色偏好按用户要求落实。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-014,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无相机功能。,CameraX/Camera2 镜头真实枚举并切换到目标后摄、广角/长焦、对焦、曝光、闪光等可用硬件，不凭机型宣传名称推断。,
+AND-015,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无相机功能。,拍摄预览纵横比、实际保存图像、裁切/旋转/EXIF、镜像一致；无黑边/变形/错误 3:4。,
+AND-016,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无录音功能。,录音输入（主麦/蓝牙/双麦）、采样率、通道数、权限切换、接听电话/来电中断与保存原音符合设计。,
+AND-017,P1,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,仅 2–3 分钟轮次，未做长时温升/电量测试。,连续拍摄/长时录音/高频计时期间内存、温升、电量、存储不足行为可承受。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-018,P0,6. Android 原生 APK / WebView 壳（AND）,是,BLOCKED,无真实课程素材与本机授权目录；课程导入/增量扫描无法真机复验。,文件导入走用户可理解的系统选择器，能从 Mac 导入课程 MP3/视频，权限拒绝/媒体移动时能恢复。,docs/qa/regression-2026-11-14-v1.1.md §4
+AND-019,P0,6. Android 原生 APK / WebView 壳（AND）,是,BLOCKED,无课程，播放/锁屏有声/断点续播无法验证。,媒体播放有前后台进度、断点续播、音量/耳机状态、通知控制（如承诺）；关屏时不会无声停止却显示播放中。,docs/qa/regression-2026-11-14-v1.1.md §4
+AND-020,P1,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,无障碍/大字/字号偏好、底栏触控、不借长按隐藏关键动作均可用。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-021,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,本地 Room/SQLite/文件的数据升级迁移不丢历史；计次/时长/备注等不同模式都有完整 CRUD。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-022,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,备份恢复到同机完成；未做双机恢复。,本地备份恢复到另一台手机后，数据条数、内容、时间、图片/音频引用能对账。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-023,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无云同步，V1 完全离线。,若有云同步，断网队列、冲突、重复、删除墓碑、登录过期、重新登入与多设备覆盖经实测。,
+AND-024,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无云端依赖；离线即主路径。,云端停机时本地核心功能可用（本地优先的产品）；明确仅在线 AI/转写无法使用时的提示。,
+AND-025,P1,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,纯离线，无 adb reverse/本机服务依赖。,`adb reverse`/本机 127.0.0.1/测试代理不意外留在正式版；离开家 Wi-Fi 后不依赖 Mac mini 服务，除非产品已明确采用远程服务。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-026,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,已测无课程错误提示；未测损坏媒体/权限拒绝错误码。,错误码和中文提示能对应真实原因；原生桥回调参数顺序、异常抛出、取消都覆盖测试。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-027,P1,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,切后台/旋转/杀进程恢复原页面、播放位置或训练进度，不将临时状态误存为结束。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-028,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,三态主题（或明确不支持跟随系统）无视觉缺失；最小字号和按钮高度满足目标人群。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-029,P0,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,无语音识别/语音交互功能。,需要语音的功能至少区分真人现场、外放录音、mock 三层验收，三者不能互相冒充。,
+AND-030,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,JSON 备份导出成功且可解析；未验证媒体导出（产品不导出媒体）。,App 分享/导出/文件下载实际生成可用文件，不只提示“导出成功”；可由文件管理器打开。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-031,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,历史覆盖安装保数据 PASS；本轮未做 0.2.7→0.2.8 覆盖升级复验。,新 APK 不覆盖原有已交付 App 的用户数据；升级前有备份，失败可回到可用包。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-032,P1,6. Android 原生 APK / WebView 壳（AND）,是,FAIL,设备占用与版本未按锁核对；21091116AC 实为 0.2.7(18)，与「四机同 0.2.8」不符。,真机 QA 前确认目标 App 当前前台、设备占用、包名和版本；不能 BACK 退出到其他 App 后误判“被抢前台”。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-033,P1,6. Android 原生 APK / WebView 壳（AND）,N/A,N/A,非 WebView 壳，纯原生 Compose。,Android WebView 新 CSS 单位和 JS API 使用能力探测；旧机最低支持版本明确。,
+AND-034,P1,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,系统“省电限制、精确闹钟、通知权限、后台运行”差异已声明，承诺的可靠提醒有可重复实测而非假定。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-035,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,最终机器验收只针对本轮明确目标机型；未列为目标的手机不因“想更完美”擅自扩成强制阻塞。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-036,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,SCHEDULE_EXACT_ALARM=deny；未测授权后、撤销授权、重启重排。,需要精确到点的 Android 提醒时，先核实确有必要使用精确闹钟，并检查相关权限、canScheduleExactAlarms、用户撤销授权、系统重启及恢复设备后的重新排程；未经实测不得承诺绝对准时。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-037,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,需要后台继续录音/相机/持续服务时，核验目标 Android API 对前台服务启动时机、while-in-use 权限和后台限制；捕获 FGS 异常与受限行为并提供明确降级，不作“永远常驻”不实承诺。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-038,P1,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,侧载安装历史 PASS；本轮未做文件管理器独立安装。,分发给用户或朋友的 APK 不能只靠 adb/IDE Run 成功；检查文件管理器侧载、testOnly、签名、来源提示、首次启动和覆盖升级，不擅自卸载重装丢数据。,docs/qa/evidence-2026-11-14-regression/README.md
+AND-039,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,对涉及账号、录音、照片或私有资料的 App，按 OWASP MASVS 风险选适用项：安全存储、HTTPS、导出组件/深链/ContentProvider 权限、日志脱敏及备份泄露；小工具无需无端堆复杂安全模块。,docs/qa/evidence-2026-11-14-regression/README.md
+DESK-001,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,交付是可启动的 App/安装程序，而不是每次要输入终端命令。,
+DESK-002,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,安装位置唯一、应用名称/Bundle ID 稳定；升级后不会同时出现多个旧版图标。,
+DESK-003,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,最小化、隐藏、退出、关闭窗口、菜单栏保留、Dock 显示等语义先定义并在系统实测，不能把几个动作混成一个。,
+DESK-004,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,录屏/展示模式可自动隐藏控制按钮，鼠标移入才浮现；浮层不污染录制画面。,
+DESK-005,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,菜单栏/托盘、全局快捷键、启动自启/防休眠依赖与权限真实有效。,
+DESK-006,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,后台服务异常可以自动恢复，或者用户 1–2 次点击可修复；不依赖复杂终端排障。,
+DESK-007,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,安装更新遵守「构建→验证→旧版临时备份→替换→启动验收→清理」，失败可回滚。,
+DESK-008,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,macOS 进程实际执行路径指向正式 App，非旧安装副本或开发目录；包的签名/版本正确。,
+DESK-009,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,鼠标操作、键盘、窗口缩放、外接显示器、高 DPI、系统主题下不遮挡。,
+DESK-010,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,声音开关、静音、循环播放停止、系统音量与音频设备切换行为正确；关闭告警必须真的停声。,
+DESK-011,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,电脑重启后软件状态、配置、最近记录恢复；数据写入的是稳定用户目录。,
+DESK-012,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,Windows/macOS 兼容路径空格、中文路径、Shell 引号和权限受限情况。,
+DESK-013,P1,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,构建输出/缓存/临时旧包不污染正式应用和 Git；清理仅在核实唯一性后按授权执行。,
+DESK-014,P0,7. macOS/Windows 桌面工具（DESK）,N/A,N/A,非 macOS/Windows 桌面工具。,任务失败能恢复工作状态，用户不必因“软件没反应”杀进程重启。,
+DATA-001,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,选 SQLite/Room、IndexedDB、Supabase、CloudBase 或独立后端有明确理由；不因项目多就每个购新实例。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-002,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,单一数据权威源与其他派生表、文档、缓存、统计关系明确，派生值不得单独手改。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-003,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无共享云。,共享云中各项目有独立命名空间/Schema/表/存储前缀/权限边界，不能简单加 `app_id` 就自称隔离。,
+DATA-004,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无公共读写权限/RLS。,公共读写权限经最小权限配置、匿名读字段白名单和 RLS/GRANT 实测；客户端无 service_role/管理密码。,
+DATA-005,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,不把“请求返回无错误”当写入成功；核对受影响行数、revision 和回读内容，0 行必须按冲突/失败处理。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-006,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PARTIAL,Room schema 有版本，但本轮未做迁移实测。,Schema/迁移有唯一发布者、版本号、审查结论、影响评估与生产备份，未经授权不推生产迁移。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-007,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PARTIAL,未做旧库→新库迁移演练。,旧数据迁移的正向、回滚/补偿、幂等重放、重复键/外键验证；迁移失败不能照常启动污染数据。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-008,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无云端同步队列。,本地离线队列与云端同步有明确 `revision`、`deleted_at`、冲突策略、失败重试与幂等去重。,
+DATA-009,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,历史备份与云同步是两个不同能力；支持误删后的版本恢复，且做过隔离环境恢复演练。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-010,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无云端大文件上传。,上传大文件/长任务不使用固定总时长超时截断，采用进度驱动的空闲超时、断点续传与幂等提交。,
+DATA-011,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无共享云预算与压测。,批量/全量/压测先通过共享资源预算闸门；按现行共享云 SOP 读取真实额度与停测阈值，禁止无计划烧点数。,
+DATA-012,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无云资源台账。,用量、费用、数据库到期、环境归属和跨项目关联登记于唯一台账，异常门槛可触发告警。,
+DATA-013,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,无网络、5G、家 Wi-Fi 关闭、云环境挂掉时业务有明确降级，不意外连接本机开发服务。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-014,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无后台服务/Docker/LaunchAgent。,后台进程、Docker Compose、LaunchAgent 各只管理自己的生命周期；同一服务不能重复守护。,
+DATA-015,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无网络服务健康检查。,服务健康检查测到业务可用而不仅是端口监听；健康检查不能被进程冲突假阳性骗过。,
+DATA-016,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无容器/服务重启恢复。,服务重启、重建容器、依赖断连后可恢复，挂载数据库数据卷不会因为重建丢失。,
+DATA-017,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PARTIAL,测试数据写在用户设备真实库；已保留并在报告说明，未在隔离环境。,生产与测试环境配置隔离，测试不会清空真实表、覆盖用户账户/云对象；临时账号数据清理有授权与对账。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-018,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无 API Key/第三方凭据。,API Key 的存放、命名、用途、额度、轮换/失效都经统一管理；不在日志、文档、Git 和客户端泄露明文。,
+DATA-019,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无账号登录。,账户状态、401/403、权限过期、网络重试不会造成重复写入或错误归因；正式用户登录态在手机真实测。,
+DATA-020,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无云端分页/批量同步。,查询、分页、批量同步与单次读写设合理上限，不用千行循环 GET 反复耗共享云资源。,
+DATA-021,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无自定义域名/备案。,若国内云绑定自定义域名，备案、域名/DNS、服务商限制前置核对；联调用的临时地址不得当正式交付域名。,
+DATA-022,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无跨项目共享资源。,跨项目共享资源变更必须列受影响项目并做有针对性的回归，不能只验本项目。,
+DATA-023,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,日志可以定位错误但要脱敏，Secret/个人音视频/图片/聊天记录不得入公开库。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-024,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无云端归档/自动清理作业。,自动归档或清理作业不删云端唯一副本；删除前提供 dry-run、影响数与恢复路径。,
+DATA-025,P0,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无共享云隔离。,共享云“隔离”必须验证请求方 JWT/角色/Key/Schema/RLS 实际权限，不得仅因业务表新增 app_id 列就认定隔离；跨两个项目角色互读写要被拒绝。,
+DATA-026,P0,8. 数据库、共享云、后端服务与 API（DATA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,备份不是“文件存在”：核验可读取、可恢复到隔离环境、恢复后对账、失败回滚，以及云同步误删后的历史快照；备份密钥归属与到期也要可恢复。,docs/qa/evidence-2026-11-14-regression/README.md
+DATA-027,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无共享数据库迁移。,共享数据库迁移要输出受影响项目/Schema/权限与旧客户端兼容矩阵；按可回滚迁移方案和唯一发布者执行，不能仅本项目通过就改生产。,
+DATA-028,P1,8. 数据库、共享云、后端服务与 API（DATA）,N/A,N/A,无自动巡检任务。,自动健康/额度巡检对“未检测”“检测失败”“确认正常”三类状态分别记账；缺读数先查采集任务与落盘链路，不用旧截图、推算或无错误响应冒充正常。,
+AI-001,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,AI 只用于确有必要的环节；本地规则/原生功能能做的不要为“智能”徒增模型调用。,
+AI-002,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,模型供应商、正式 API、网关路由、额度/费用、超时与替代候选可核实；不把测试模型输出写成正式产品承诺。,
+AI-003,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,用户真实素材贯穿端到端测试：中文/英文/中英混说、噪声、多人、长语音、视频字幕；Mock 仅测逻辑。,
+AI-004,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,ASR 的输入设备、分声道/混音假设明确，不把一拖二双麦错误标为真正独立双声道。,
+AI-005,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,实时对话状态机含开始/暂停/继续/结束/分段，别人短暂离场不强迫结束整个会话。,
+AI-006,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,中文口语翻译成英文须保持“录制仍进行中、点按查看翻译”的真实使用流，不额外强迫发送/复制/切换一堆模式。,
+AI-007,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,转写/翻译/字幕输出有时间戳、置信与不确定性处理，纠错保留原文，不悄悄重写用户内容。,
+AI-008,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,字幕生成→预览→编辑→导出/烧录的全链路可用；仅 ASR 初检成功不算字幕功能完成。,
+AI-009,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,视频渲染器支持目标滤镜（如 FFmpeg libass），启动时做能力探测；缺组件显示明确错误而不让用户反复重试。,
+AI-010,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,中日韩无空格文本字幕换行、标点/行数、样式、边界、遮挡已做实际帧级测试。,
+AI-011,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,翻译质量必须有人类/可信对照样本验收；35/40 可生成不等于 35/40 翻译合格。,
+AI-012,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,模型失败（空结果、格式错、429、余额不足、网络断、违规内容）有恢复/替代路径；用户原始素材不丢失。,
+AI-013,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,长任务具备进度、取消、恢复、去重，重试不重复扣费或覆盖已经处理好的片段。,
+AI-014,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,在线 AI 能力与完全本地离线能力边界可见，外出使用不依赖家里 Mac，除非明确有公网可达且经过实测。,
+AI-015,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,凭据只在服务端/网关保存，客户端不暴露正式 Key；错误信息不泄露后台内部信息。,
+AI-016,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,内容审核、授权素材、肖像/录音使用范围、安全注意与用户删除权符合用途；不把 AI 猜测写成事实。,
+AI-017,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,导出后的字幕/视频/MP3/压缩包在目标手机真实播放、分享、重导入；文件并非空壳。,
+AI-018,P0,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,QA 证据采集时间要晚于修复和门禁生效时间，旧证据不能误判当前版本。,
+AI-019,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,处理外部文章、字幕、文档、网页与多用户输入的 AI 流程，将检索内容视为不可信数据；测试恶意指令/隐私诱导/伪造系统提示不会让代理泄密、越权改文件或调用高风险工具。,
+AI-020,P1,9. AI、语音、字幕、图片和视频流程（AI）,N/A,N/A,产品明确禁止 AI/在线模型，V1 完全离线。,对 AI 字幕、转写、翻译的产品完成态分别证明：生成链路成功、样本质量达标、用户可修改、导出结果能使用，不能以单测/本地渲染全绿宣称线上可用。,
+MEDIA-001,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,BLOCKED,无真实媒体，完整播放闭环无法验证。,文件选择/导入、完整处理、预览、保存、导出、再次打开形成闭环。,docs/qa/regression-2026-11-14-v1.1.md §4
+MEDIA-002,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,BLOCKED,仅验证 0 文件空态；其余输入矩阵缺样本。,0 文件、1 文件、多文件、大文件、损坏文件、无权限路径、重名文件处理正确。,docs/qa/regression-2026-11-14-v1.1.md §4
+MEDIA-003,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无镜像/A-B/段落练习/原唱伴唱功能。,视频的镜像、倍率、循环范围、A–B 点、时间轴位置、段落练习、切换原唱/伴唱交互一致。,
+MEDIA-004,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无两句/四句循环。,开启两句/四句或 A–B 循环后有清晰退出方式、选中高亮与范围可见反馈。,
+MEDIA-005,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,倒计时目标可配置；中途结束确认是否计入；完成后历史、统计、个人最佳同步更新。,docs/qa/evidence-2026-11-14-regression/README.md
+MEDIA-006,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,仅按时长计时，无次数模式。,多模式（时长/次数）数据模型、Tab、记录、搜索、统计、备份、同步同时设计，不做半截。,
+MEDIA-007,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,PARTIAL,到点停媒体未测（无课程）；铃声/通知单次 PASS。,提醒音、计时完成、媒体继续播放/暂停优先级明确；停止计时不意外重复弹窗或声音。,docs/qa/evidence-2026-11-14-regression/README.md
+MEDIA-008,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,BLOCKED,无课程断点，续播无法验证。,自动继续上一媒体位置/课程，不是每次从第一首播放；章节更新和不同课程分别保存进度。,docs/qa/regression-2026-11-14-v1.1.md §4
+MEDIA-009,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无拍照/选片/收款交付流程。,现场拍摄主流程“拍照→回看→删废片→客户选片→套餐升级→直接收款→交付”一口气跑通，不加入未授权的 AI 修图。,
+MEDIA-010,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无选片数量/套餐计价。,客户选片数量可自由调整、套餐中途升级计价正确、全套交付不被旧“交付张数”限制。,
+MEDIA-011,P1,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无批量媒体处理/导出。,多文件批处理有成功/失败/跳过数量与可重试入口，ZIP/CSV 可下载可解压。,
+MEDIA-012,P0,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无录制与字幕时间轴。,录制途中暂停/恢复时音频时长、字幕时间轴和会话 Section 边界一致。,
+MEDIA-013,P1,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无相册原图/缩略图处理，不删源文件。,相册中原图/缩略图/已处理版本不混淆，任何删图操作不越界删除用户原始素材。,
+MEDIA-014,P1,10. 相机/媒体/播放器/时长记录专项（MEDIA）,N/A,N/A,无双端演示/提词器。,横屏演示/提词端无需复杂控制，编辑端变更同步到展示端且保存冲突可恢复。,
+MEDIA-015,P1,10. 相机/媒体/播放器/时长记录专项（MEDIA）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,共享手机/长时间音视频现场测试前先锁定设备与前台 App，检查音频焦点、中断/恢复和前台占用日志；退出时不可误触其他应用或把前一项目的证据当当前结果。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-001,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无定时任务。,定时任务真正存在、已获用户授权启用，而不是仅在登记表里写“计划执行”。,
+OPS-002,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无定时任务。,每个任务定义触发时区、时点、输入、输出文件、失败/重试、去重、异常提醒和超时。,
+OPS-003,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无定时任务。,实测触发一次、验证真实结果产出；配置成功不等于执行成功。,
+OPS-004,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无定时任务。,任务幂等：同一天重复运行/断点恢复不会重复发表、重复删除或覆盖正确结果。,
+OPS-005,P1,11. 自动化、后台与治理（OPS）,N/A,N/A,无外部数据源。,外部数据源不可用时替代源/失败告警合理；不能将未取到数据写成“今日无内容”。,
+OPS-006,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无后台服务登记需求。,后台服务注册表、唯一进程管理者、端口、日志、用户操作入口一致；重复进程与端口冲突可识别。,
+OPS-007,P1,11. 自动化、后台与治理（OPS）,N/A,N/A,项目内无脚本母版铺开。,任何脚本母版更新应检查受影响项目是引用还是复制，禁止同一缺陷散播 25 个项目。,
+OPS-008,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,本轮未改 shell 脚本。,Shell 变量拼接中文/全角符号使用 `${var}` 定界；对 shell 脚本执行 `bash -n` / `zsh -n` 与关键负面用例。,
+OPS-009,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无自动转发/恢复脚本。,用户已关闭的开发终端、无关 IDE 或其他项目窗口不得由自动转发/恢复脚本擅自打开。,
+OPS-010,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无跨程序转发。,跨程序转发只发 READY、已批准且未发送的任务；多窗口/多项目精确匹配、单次至多一条、有回执。,
+OPS-011,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,无守护进程。,守护与后台任务异常不得“静止宕机”；有超时、进度心跳、可恢复路径且不死循环烧额度。,
+OPS-012,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,任务、Skill、管家说明、台账不得出现多套互相冲突的真源；读历史结论前比对最新事实与复盘日期。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-013,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,复盘产物、AC、HANDOFF、VERSION 进入授权的版本控制或可恢复的私有归档；不被 `.gitignore` 静默排除。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-014,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,复盘已存在相同教训时只更新证据与现有检查门，避免再写第 5 条同义规则。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-015,P1,11. 自动化、后台与治理（OPS）,N/A,N/A,本轮未改管家权限/中央规则。,管家 `说明.md` 决定权限边界；无权跨项目改配置、建任务、装 Skill、删备份或改中央规则。,
+OPS-016,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮使用 3 个已登记 Skill，登记/部署/可发现/实跑分列记录。,用户级 Skill 的中央登记/SM 导入/启用/分发/可发现/实跑结果分列，不能以“文件已复制”冒充可用。,docs/qa/evidence-2026-11-14-regression/logs/skill-check-2026-11-14.md
+OPS-017,P0,11. 自动化、后台与治理（OPS）,是,PARTIAL,单仓六态已列；未做批量跨仓回执。,批量跨仓操作每个项目分别给出文件写入/本地 commit/远端已 push/未推原因/远端回读五态，未获 push 授权不得自动推；禁止只写“全量已入库”。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-018,P0,11. 自动化、后台与治理（OPS）,N/A,N/A,本轮未迁移、删除 Skill 源或设计资产。,迁移、删除 Skill 源或设计资产前，先证明唯一权威副本、许可与备份仍存在；移动和删除与登记变更同一可追踪事务，失败撤销，不把副本部署当源仓备份。,
+OPS-019,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,复盘结论的基线要绑定最后实质业务提交与工作区变更，不只看文件 mtime；新 feat/fix 触发增量复评，旧“阻塞”不可长期沿用。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-020,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,治理条款已经存在却连续多轮复发时，应提升为可执行阻断门禁并回放历史失败样本；不得再新增同义 SOP、Skill 或表格装饰。,docs/qa/evidence-2026-11-14-regression/README.md
+OPS-021,P1,11. 自动化、后台与治理（OPS）,是,FAIL,上一轮未实际调用真机 QA Skill；本轮才加载 device-lock 与 QA orchestrator。,中央 Skill 已经 11/11 文件比对一致也不代表各端可运行；每个拟用于关键验收的 Skill 至少在目标 Agent 实际调用一次，并记录版本与耗用权限。,docs/qa/evidence-2026-11-14-regression/README.md
+R-001,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,构建时 VERSION 登记 commit 为 756e1715-dirty（0.2.5 提交），不包含 0.2.8 功能；干净 HEAD 重建 SHA=76b6b449，与现包 779c8433 不同，旧包不可字节复现。,发版候选来自可重现的已提交源码与配置，工作区脏或关键文件未跟踪不得作为正式包验收。,docs/qa/evidence-2026-11-14-regression/README.md
+R-002,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,VERSION/台账记 756e1715-dirty，应用内 0.2.8、APK 0.2.8(21)、构建配置 0.2.8(21) 三处一致，但构建 commit 错位。,`VERSION.md`、构建配置、应用内版本、APK/APP 元数据、CHANGELOG、台账由唯一真源派生并自动比对。,docs/qa/evidence-2026-11-14-regression/README.md
+R-003,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,包有 SHA/包名/签名；但登记 commit 不含 0.2.8 功能，「对应源码」不成立。,真实安装包有 SHA-256、包名/签名/构建 commit/对应源码，多个同版本文件绝不能仅靠文件名认包。,docs/qa/evidence-2026-11-14-regression/README.md
+R-004,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,工作区未提交 docs；远端 ahead 1；构建来源错位；四态未对齐。,“工作区 / Git HEAD / 线上站点 / 手机装机包”四态实测对齐；未上线就标“未部署”，不能用本地截图报线上已交付。,docs/qa/evidence-2026-11-14-regression/README.md
+R-005,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,AC-04/AC-08 等仍 PARTIAL，AC-12 未签收；不能写全部完成。,关键功能的 AC 全部跑完；每项记录 PASS/PARTIAL/FAIL/BLOCKED/NOT_RUN/N/A；禁止 8/10 说完成。,docs/qa/evidence-2026-11-14-regression/README.md
+R-006,P0,12. 发布、交付、回归与防返工（R）,是,BLOCKED,含课程的真实用户旅程无法完成。,用户从桌面/链接打开→完成最主要任务→保存/分享→退出→再次打开，连续不用开发者介入。,docs/qa/regression-2026-11-14-v1.1.md §4
+R-007,P0,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,新旧版本升级不丢本地数据、历史记录、已下载素材、课程进度和设置。,docs/qa/evidence-2026-11-14-regression/README.md
+R-008,P0,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,恢复演练：完整备份→卸载/新浏览器或新设备→导入→核对数据条数/内容/文件引用。,docs/qa/evidence-2026-11-14-regression/README.md
+R-009,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,历史飞行模式 PASS；本轮未重新断网复测。,断网/5G/外网/家 Wi-Fi 关闭与锁屏/后台场景（适用时）验证，不把局域网成功当外出可用。,docs/qa/evidence-2026-11-14-regression/README.md
+R-010,P0,12. 发布、交付、回归与防返工（R）,是,BLOCKED,首装需卸载重装（会丢数据）或另一台空机；本机未做。,首次用户安装/加入桌面/获取权限流程能够独立完成；不能只发开发者构建命令。,docs/qa/regression-2026-11-14-v1.1.md §4
+R-011,P0,12. 发布、交付、回归与防返工（R）,是,NOT_RUN,本轮未单独执行（受时间/样本/设备限制），按未测处理。,系统资源/Key/数据库/账号/正式域名等开工阻塞与交付阻塞逐项清零或明确批准延期。,
+R-012,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,已测无课程、重复点击、取消、强停；未测存储不足/权限拒绝/损坏文件。,主流程的否定路径：空输入、网络失败、权限拒绝、重复点击、重试、取消、关屏、进程回收均有实测。,docs/qa/evidence-2026-11-14-regression/README.md
+R-013,P0,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,每个 Bug 修复后先验证旧用例，再跑受影响相邻功能和关键主流程，避免“修这里坏那里”。,docs/qa/evidence-2026-11-14-regression/README.md
+R-014,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,有真机截图，但未与原型逐屏 diff。,真实设备截图与已批准原型逐屏差异核查，字体、密度、底栏、图片、状态提示、主题一致。,docs/qa/evidence-2026-11-14-regression/README.md
+R-015,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,项目 README 极简；无对外站点/Release 需核对。,审查正式产物的在线能力/权限/网络/价格声明，个人网站、README、Release、用户帮助与当前已发布版本相符。,docs/qa/evidence-2026-11-14-regression/README.md
+R-016,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,HANDOFF 已同步真实提交状态；但仍写四机均 0.2.8，与实测 12T Pro=0.2.7 冲突。,交接文档只保留一份当前真源，旧副本标废；“已提交/未提交、已推/未推、已部署/未部署”不互相矛盾。,docs/qa/evidence-2026-11-14-regression/README.md
+R-017,P1,12. 发布、交付、回归与防返工（R）,N/A,N/A,单人侧载 App，无 CI；本地 Gradle 单测+构建日志为现有证据。,CI 记录构建、静态检查、单测、UI 冒烟、关键 E2E；失败不可被“其他模块全绿”掩盖。,
+R-018,P0,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,用户签收只针对明示版本/范围；用户说“界面可以”不代表云同步、锁屏提醒、首次正式发布全部已验收。,docs/qa/evidence-2026-11-14-regression/README.md
+R-019,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,有 APK 路径/版本/SHA/安装方式；缺用户交付目录与已知限制清单。,交付包包括可安装文件或线上 URL、版本号、更新摘要、安装方法、已知限制、备份/回滚方法，不用内部文件堆让用户猜。,docs/qa/evidence-2026-11-14-regression/README.md
+R-020,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,VERSION 指向的包构建于 2026-11-13 13:26，功能提交 a74c823 晚于出包；旧证据与包时间链不一致。,构建、部署、用户真机时间顺序正确；不引用修复前的旧截图来证明修复后的新版已通过。,docs/qa/evidence-2026-11-14-regression/README.md
+R-021,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,未清理历史遗留 backlog（21 条 P2/P3）。,历史不再适用的限制、假数据、原型按钮、无效注释、废弃兼容代码按变更范围清掉；不可盲删唯一数据。,docs/qa/evidence-2026-11-14-regression/README.md
+R-022,P0,12. 发布、交付、回归与防返工（R）,是,BLOCKED,真实课程连续使用需课程素材与用户参与。,开发收尾做一次“像普通用户一样 15–30 分钟使用”且无需终端、无需解释、无需调试；记录摩擦点并修复。,docs/qa/regression-2026-11-14-v1.1.md §4
+R-023,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,无内置反馈入口（个人侧载工具）。,首次交付后的崩溃/失败/使用反馈有最简问题反馈机制，不引入复杂客服系统。,docs/qa/evidence-2026-11-14-regression/README.md
+R-024,P1,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,每轮复盘判断结论是否已被新业务提交或工作区新开发推翻，必要时新建增量复盘而非改旧证据。,docs/qa/evidence-2026-11-14-regression/README.md
+R-025,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,适用 P0 未全绿：真实课程播放/断点、首装、AC08 10 轮、用户签收均未完成。,本项目 P0 在真实环境全绿、所有延期有用户明确确认时才报“相对完善可交付”；否则准确报告还差哪几条。,docs/qa/evidence-2026-11-14-regression/README.md
+R-026,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,六态已分列；设备安装态写错（12T Pro 实为 0.2.7），不可称已交付。,发版身份分列“工作区、已提交 HEAD、远端已推送、正式部署、设备安装、用户签收”，每态标来源/版本/证据，不得把本地 commit/安装/测试称为已交付。,docs/qa/evidence-2026-11-14-regression/README.md
+R-027,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,登记 commit 不含本轮功能；功能提交 a74c823 未早于出包。,正式打包前除了工作树干净，还要断言登记 commit 包含本轮功能变更：源码提交时点必须早于出包、出包 hash 必须属于该提交，文档/复盘提交不得冒充功能提交。,docs/qa/evidence-2026-11-14-regression/README.md
+R-028,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,版本登记脚本对 dirty/来源不明不会自动 FAIL；本轮靠人工发现，未形成自动拦截。,发布与版本登记脚本对 dirty、缺失 VERSION/AC/关键证据、版本不一致或构建来源不明直接 FAIL；探索性 dirty 包仅标“不可分发”，不得出现在正式安装/验收清单。,docs/qa/evidence-2026-11-14-regression/README.md
+R-029,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,证据已绑定设备/包/时间；部分 AC 仍引用旧版本证据。,每条 QA 证据写明测试发生在修复后、对应的设备/浏览器/代码提交/具体发布包 SHA；只有“截图存在”或旧版测试通过不得继承到新版。,docs/qa/evidence-2026-11-14-regression/README.md
+R-030,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,无 CI provenance；仅本地 Gradle 构建日志。,能使用 CI 的项目要归档完整构建来源信息（源 SHA、依赖锁文件、构建环境、产物 digest），必要时采用构建溯源证明；“可追溯来源”与严格字节级可重复构建是两种不同结论。,docs/qa/evidence-2026-11-14-regression/README.md
+R-031,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,源码/设备/文档口径不一致：HANDOFF 与矩阵停留在 0.2.7/0.2.5，设备装 0.2.8。,最终验收前核对本轮代码真相、线上运行版本、设备安装版本与对外 README/展示站口径一致；本地做了 96 项测试而线上仍旧版，必须停在 LOCAL_TESTED 而非 READY。,docs/qa/evidence-2026-11-14-regression/README.md
+R-032,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,侧载路径历史可用；本轮未走非开发者独立安装。,出包后执行真实用户可独立获得的分发路径（链接、下载、文件分享、原生安装），并记录首装、覆盖升级、撤销/回滚；未签收的 P0 与真实不可控环节清晰保留 BLOCKED。,docs/qa/evidence-2026-11-14-regression/README.md
+R-033,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,AC 汇总表未按本轮版本/设备/证据逐项刷新。,最终状态表对每个 AC 显示适用性、是否运行、版本、实际证据；PARTIAL、NOT_RUN、BLOCKED、AWAITING_USER 绝不折算 PASS，已明确延期须有用户批准范围与版本。,docs/qa/evidence-2026-11-14-regression/README.md
