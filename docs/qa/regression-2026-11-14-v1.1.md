@@ -227,7 +227,7 @@ UI 取证：计时页 `uiautomator dump` 多次返回 `could not get idle state`
 |---|---|---|
 | 本机可测 | 是；9 轮真机 + Android 15 补测 + 0.2.9 真实课程复测 + 79 单测 | 本报告 §4、§10、§11 |
 | 源码已提交 | 是：`4313599`(docs) + `5cf5842`(0.2.9 修复) + `d654ca5`(docs)；HEAD `d654ca5` | `git log` |
-| 远端已推送 | **否**：`main` ahead 3 | `git status`/`git log` |
+| 远端已推送 | **否**：本地有未推送提交（`git rev-list --count origin/main..HEAD` 非 0） | `git status`/`git log` |
 | 设备已安装 | **部分**：Note 11T Pro+ 为 **0.2.9(22)**；OPPO、Note 12 Pro 为 0.2.8(21)；Note 11T Pro 为 0.2.7(18) | `logs/device-inventory-2026-11-14.txt`、`VERSION.md` |
 | 正式已验收 | **否**：AC-08 10 轮/首装等未测，用户未签收 | AC-12 |
 
