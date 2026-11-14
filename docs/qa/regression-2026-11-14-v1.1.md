@@ -225,25 +225,24 @@ UI 取证：计时页 `uiautomator dump` 多次返回 `could not get idle state`
 
 | 态 | 事实 | 证据 |
 |---|---|---|
-| 本机可测 | 是；9 轮真机 + 76 单测 | 本报告 §4、`logs/` |
-| 源码已提交 | 0.2.8 功能已提交 `a74c8235`；HEAD `8915d0dd` | `git log` |
-| 远端已推送 | **否**：`main` ahead 1（`8915d0dd` docs-retro 未推） | `git status`/`git log` |
-| 设备已安装 | **部分**：OPPO PLG110、Note 11T Pro+、Note 12 Pro 为 0.2.8(21)；Note 11T Pro（21091116AC）实为 0.2.7(18) | `logs/device-inventory-2026-11-14.txt`（逐台 `dumpsys package`） |
-| 正式已验收 | **否**：用户未签收；且现包为 dirty 来源，不可签收 | AC-12 |
+| 本机可测 | 是；9 轮真机 + Android 15 补测 + 0.2.9 真实课程复测 + 79 单测 | 本报告 §4、§10、§11 |
+| 源码已提交 | 是：`4313599`(docs) + `5cf5842`(0.2.9 修复) + `d654ca5`(docs)；HEAD `d654ca5` | `git log` |
+| 远端已推送 | **否**：`main` ahead 3 | `git status`/`git log` |
+| 设备已安装 | **部分**：Note 11T Pro+ 为 **0.2.9(22)**；OPPO、Note 12 Pro 为 0.2.8(21)；Note 11T Pro 为 0.2.7(18) | `logs/device-inventory-2026-11-14.txt`、`VERSION.md` |
+| 正式已验收 | **否**：AC-08 10 轮/首装等未测，用户未签收 | AC-12 |
 
-**当前允许的表述**：`LOCAL_TESTED`（本地已测，存在 P0 阻断，不可作为正式验收分发包）。
+**当前允许的表述**：`LOCAL_TESTED`（0.2.9 为待验收候选包）。
 **不允许的表述**：`READY_FOR_USER_ACCEPTANCE`、`RELEASED`、`ACCEPTED_BY_USER`。
 
 ## 9. 需要用户拍板
 
-本轮不擅自 commit / push / bump 版本 / 卸载重装 / 改系统设置。接手轮复核后的最小闭环顺序：
+A1/B1/E1 已执行：本地 commit（未 push）、0.2.9 干净构建/登记/装机复测、设备锁重绑。剩余：
 
-1. 授权把 `USER_MODEL_OVERRIDE.md.旧版-2026-11-11` 移入 `.local/archive/`（不删除），并允许本地 commit 本轮文档同步（需给分支名）。
-2. 授权 bump `versionCode=22`，从干净 HEAD 构建，`version-registry-local-zh` 重新登记，`install -r` 到目标机复测。
-3. 决定是否把「返回键无页面栈」「完成页课程文案」并入 vc22 修复批次（前者为 P1 规范冲突，后者为 P2）。
-4. 真实课程链：四台在连设备均未找到 mp3/mp4，Note 11T Pro 的 App 库 courses=0；需用户指定真实素材所在路径或设备后补测。
-5. 通知权限：Note 11T Pro+ 当前允许通知/锁屏/发声/振动全关；需用户决定是否开启后做正向复测，或明确以「系统权限前提未满足」记 BLOCKED。
-6. 最后由用户逐条签收 AC-12。
+1. **push**：是否把 `main` 上 3 个本地提交推到 origin/main（本轮只授权 commit）。
+2. **AC-08 与首装**：是否补每状态 10 轮和首装，或明确接受延期并进入签收。
+3. **通知权限（D1）**：Note 11T Pro+ 允许通知/锁屏/发声/振动全关且勿扰开启；需用户开启后复测到点可见，否则记 BLOCKED。
+4. **真实课程（C1 后续）**：13 节已在目标机并完成播放/断点/锁屏有声；自动下一节与无音轨提示仍缺样本或需长时播放。
+5. 最后由用户逐条签收 AC-12。
 
 ## 10. 接手轮复核（2026-11-14 13:10–13:30）
 
