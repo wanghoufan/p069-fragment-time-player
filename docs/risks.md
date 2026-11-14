@@ -69,7 +69,12 @@
 - 处置：发布前逐台回读 versionName/Code 与 SHA，或由用户明确接受单机验收；清单见 `docs/qa/evidence-2026-11-14-regression/logs/device-inventory-2026-11-14.txt`。
 
 ### R21 返回键页面栈（已修，0.2.9）
-- 处置：`resolveBackAction` 已实现非计时 Tab 回计时、完成页回 IDLE、其余双击退出；Android 15 真机 BACK 复测 PASS，单测 3 条。
+- 处置：`resolveBackAction` 已实现非计时 Tab 回计时、完成页回 IDLE、其余双击退出；Android 15 与 Android 14 真机 BACK 复测均 PASS，单测 3 条。
+
+### R22 锁屏首屏不显示到点通知（Android 14/15，权限全开）
+- 影响：用户锁屏时只听到铃声，看不到「哪节课结束」；与权限无关，改系统开关解决不了。
+- 触发：Note 12 Pro 允许通知/锁屏/发声/振动全开、勿扰关，通知 6901 在系统记录中存在，但锁屏首屏只显示其他 App 媒体卡。`dumpsys notification` 显示 `sound=null vibrate=null groupKey=silent`——应用自播铃声、通知本身静音，被系统归入 Silent 分区。
+- 处置：需产品调整通知策略（通知自带 alarm 声音进 Alerting 分区，或评估 close 响铃开关语义）；未获用户确认前不改。旧 Note 11「开权限后可见」不可外推到新系统。
 
 ## 3. 低影响 / 观察项
 
