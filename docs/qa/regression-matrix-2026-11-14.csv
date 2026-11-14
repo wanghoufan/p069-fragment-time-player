@@ -112,7 +112,7 @@ AND-001,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通
 AND-002,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,versionName、versionCode、界面“关于”、VERSION、文件名与包内元数据一致。,docs/qa/evidence-2026-11-14-regression/README.md
 AND-003,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,0.2.9(22) 由功能提交 5cf5842 后的干净工作区构建；SHA=4a05ddc0…3359，构建时间 2026-11-14 13:31。,构建来自明确干净 commit；记录 APK SHA-256、构建时间、签名证书指纹；不拿 dirty 包签收。,VERSION.md
 AND-004,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,codearts-069 已按实测重绑 Redmi Note 11T Pro+；每次 input 前核对 mCurrentFocus。,用 `adb -s <设备ID>` 精确锁定目标设备；同机多智能体串行持锁，测试前核查前台应用归属。,docs/qa/evidence-2026-11-14-regression/logs/device-lock-state-2026-11-14.txt
-AND-005,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,首次安装未做（卸载会丢 21 条历史）；本轮仅冷启动/重启/强停，未做覆盖升级。（0.2.10 覆盖升级 0.2.9→0.2.10 成功，首次安装仍未做。）,首次安装、冷启动、首次授权、拒绝授权、重启、覆盖升级、重新打开均在真实机操作。,docs/qa/evidence-2026-11-14-regression/0.2.10/README.md
+AND-005,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,0.2.10 真机完成：0.2.9→0.2.10 覆盖升级（数据 2/13/10/1 保留）；卸载前导出并解析备份→全新安装 firstInstallTime 17:46:18→首启弹通知权限框→拒绝分支可用（无通知、应用内到点正常）→授权分支通知恢复→导入备份恢复 13 课程与文件夹关联；冷启动/重启/重新打开均实测。,首次安装、冷启动、首次授权、拒绝授权、重启、覆盖升级、重新打开均在真实机操作。,docs/qa/evidence-2026-11-14-regression/first-install/README.md
 AND-006,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,目标设备的 Android 版本、厂商 ROM、WebView 引擎版本/兼容性明确；不用开发机模拟器替代实际验收。,docs/qa/evidence-2026-11-14-regression/README.md
 AND-007,P0,6. Android 原生 APK / WebView 壳（AND）,是,PARTIAL,0.2.10 已把到点通知从 Silent 分区改到 Alerting：渠道 timer_alert_v3 带 USAGE_ALARM 音源、通知不再 setSilent、记录 mIsInterruptive=true、到点 +0.3s 且铃声 USAGE_ALARM event:started；但本机（Note 12 Pro）锁屏首屏只渲染媒体卡与 USB，同机应用外对照通知（cmd notification post）同样不可见 → 设备/ROM 行为，需换机复测可见性。,通知权限与提醒渠道已验证：允许、拒绝、静音、勿扰、振动/铃声、屏幕锁定下的实际行为。,docs/qa/evidence-2026-11-14-regression/0.2.10/README.md
 AND-008,P0,6. Android 原生 APK / WebView 壳（AND）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,倒计时/录音/播放跨前台、后台、锁屏、来电、耳机拔插、系统回收行为明确，能恢复或按设计停止。,docs/qa/evidence-2026-11-14-regression/README.md
@@ -248,7 +248,7 @@ OPS-021,P1,11. 自动化、后台与治理（OPS）,是,PASS,本轮实跑 device
 R-001,P0,12. 发布、交付、回归与防返工（R）,是,PASS,0.2.9(22) 由功能提交 5cf5842 的干净工作区构建，包可追溯到本轮功能提交。,发版候选来自可重现的已提交源码与配置，工作区脏或关键文件未跟踪不得作为正式包验收。,VERSION.md
 R-002,P0,12. 发布、交付、回归与防返工（R）,是,PASS,VERSION/台账/构建配置/应用内均为 0.2.9(22)，构建 commit 5cf5842。,`VERSION.md`、构建配置、应用内版本、APK/APP 元数据、CHANGELOG、台账由唯一真源派生并自动比对。,VERSION.md
 R-003,P0,12. 发布、交付、回归与防返工（R）,是,PASS,包名、SHA=4a05ddc0…3359、commit 5cf5842、versionCode 22 四处认包一致。,真实安装包有 SHA-256、包名/签名/构建 commit/对应源码，多个同版本文件绝不能仅靠文件名认包。,VERSION.md
-R-004,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,工作区已提交、HEAD=5cf5842、设备已装 0.2.9；远端 main 仍领先 1 个 docs 提交未 push。,“工作区 / Git HEAD / 线上站点 / 手机装机包”四态实测对齐；未上线就标“未部署”，不能用本地截图报线上已交付。,git status
+R-004,P0,12. 发布、交付、回归与防返工（R）,是,PASS,四态对齐：工作区干净、HEAD 已推 origin/main（ecffad2..1a61651）、无线上站点（标未部署）、设备两台 0.2.10/0.2.9 且版本回读一致；不再存在「本地新、远端旧」。,“工作区 / Git HEAD / 线上站点 / 手机装机包”四态实测对齐；未上线就标“未部署”，不能用本地截图报线上已交付。,git log origin/main; docs/qa/regression-2026-11-14-v1.1.md §15.1
 R-005,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,AC-04/AC-08 等仍 PARTIAL，AC-12 未签收；不能写全部完成。,关键功能的 AC 全部跑完；每项记录 PASS/PARTIAL/FAIL/BLOCKED/NOT_RUN/N/A；禁止 8/10 说完成。,docs/qa/evidence-2026-11-14-regression/README.md
 R-006,P0,12. 发布、交付、回归与防返工（R）,是,BLOCKED,含课程的真实用户旅程无法完成。,用户从桌面/链接打开→完成最主要任务→保存/分享→退出→再次打开，连续不用开发者介入。,docs/qa/regression-2026-11-14-v1.1.md §4
 R-007,P0,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,新旧版本升级不丢本地数据、历史记录、已下载素材、课程进度和设置。,docs/qa/evidence-2026-11-14-regression/README.md
@@ -270,7 +270,7 @@ R-022,P0,12. 发布、交付、回归与防返工（R）,是,BLOCKED,真实课�
 R-023,P1,12. 发布、交付、回归与防返工（R）,是,PARTIAL,无内置反馈入口（个人侧载工具）。,首次交付后的崩溃/失败/使用反馈有最简问题反馈机制，不引入复杂客服系统。,docs/qa/evidence-2026-11-14-regression/README.md
 R-024,P1,12. 发布、交付、回归与防返工（R）,是,PASS,本轮实测通过（设备/包/时间见证据 README）。,每轮复盘判断结论是否已被新业务提交或工作区新开发推翻，必要时新建增量复盘而非改旧证据。,docs/qa/evidence-2026-11-14-regression/README.md
 R-025,P0,12. 发布、交付、回归与防返工（R）,是,FAIL,适用 P0 未全绿：真实课程播放/断点、首装、AC08 10 轮、用户签收均未完成。,本项目 P0 在真实环境全绿、所有延期有用户明确确认时才报“相对完善可交付”；否则准确报告还差哪几条。,docs/qa/evidence-2026-11-14-regression/README.md
-R-026,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,六态已分列；设备安装态写错（12T Pro 实为 0.2.7），不可称已交付。,发版身份分列“工作区、已提交 HEAD、远端已推送、正式部署、设备安装、用户签收”，每态标来源/版本/证据，不得把本地 commit/安装/测试称为已交付。,docs/qa/evidence-2026-11-14-regression/README.md
+R-026,P0,12. 发布、交付、回归与防返工（R）,是,PASS,六态分列且各带来源：工作区（git status 空）、HEAD（1a61651）、远端（已推）、正式部署（无站点，N/A）、设备（Note 12 Pro 0.2.10 / Note 11T Pro+ 0.2.10 / OPPO 0.2.8 / Note 11T Pro 0.2.7）、用户签收（未签收）。,发版身份分列“工作区、已提交 HEAD、远端已推送、正式部署、设备安装、用户签收”，每态标来源/版本/证据，不得把本地 commit/安装/测试称为已交付。,docs/handoff/HANDOFF.md §1、VERSION.md
 R-027,P0,12. 发布、交付、回归与防返工（R）,是,PASS,登记 commit 5cf5842 包含返回键/文案/设置异常修复，非 docs-only 提交。,正式打包前除了工作树干净，还要断言登记 commit 包含本轮功能变更：源码提交时点必须早于出包、出包 hash 必须属于该提交，文档/复盘提交不得冒充功能提交。,git show --stat 5cf5842
 R-028,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,同号不同包已自动阻断（exit 3）；dirty 仍不阻断，本轮靠人工保证工作区干净。,发布与版本登记脚本对 dirty、缺失 VERSION/AC/关键证据、版本不一致或构建来源不明直接 FAIL；探索性 dirty 包仅标“不可分发”，不得出现在正式安装/验收清单。,docs/qa/evidence-2026-11-14-regression/logs/gate-probe-2026-11-14.txt
 R-029,P0,12. 发布、交付、回归与防返工（R）,是,PARTIAL,证据已绑定设备/包/时间；部分 AC 仍引用旧版本证据。,每条 QA 证据写明测试发生在修复后、对应的设备/浏览器/代码提交/具体发布包 SHA；只有“截图存在”或旧版测试通过不得继承到新版。,docs/qa/evidence-2026-11-14-regression/README.md
