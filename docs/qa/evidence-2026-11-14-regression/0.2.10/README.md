@@ -29,3 +29,27 @@
   因此本机不能作为「锁屏首屏可见」的正向验收机；该结论不能用来说明应用缺陷，也不能用来证明应用通过。
 - 需要另一台锁屏通知正常的机型（历史 Note 11/Android 11 曾可见，`build/qa/104-lock-alert-visible.png`）复测后才能把
   AND-007/AC-08 的锁屏可见部分判 PASS。
+
+## 4. 本轮真机前置体检与清场
+
+```text
+【前置体检回执｜0.2.10 锁屏轮】
+设备锁：status=已固定 Redmi Note 12 Pro（在线 USB）；resolve 后全程 adb -s <已解析目标>
+型号核对：ro.product.model=22101316C（Note 12 Pro，Android 14 / SDK 34），与 profile 标签一致
+①灭屏：screen_off_timeout=600000（未改）
+②端口：adb reverse --list 空；adb forward --list 空（无本项目映射，未动他人映射）
+③服务：纯本地 App，无服务端，不适用
+④前台归属：每次操作前 dumpsys window | mCurrentFocus 均为 com.wanghoufan.fragmentplayer 或通知栏/锁屏
+系统设置：未修改任何系统设置；测试用的对照通知由 cmd notification post 发出（应用外来源）
+结论：允许开跑
+```
+
+清场：测试产生的 2 条 shell 对照通知与 1 条到点通知留在通知栏（无数据写入）；App 侧除测试计时记录外未改动用户数据。
+
+## 5. 复跑命令
+
+```bash
+S=$(python3 "$HOME/.config/opencode/skills/android-device-target-lock-local-zh/android_device_lock.py" resolve --profile codearts-069)
+adb -s "$S" shell dumpsys notification --noredact | grep -A6 "pkg=com.wanghoufan.fragmentplayer"
+adb -s "$S" shell cmd notification post -S bigtext -t 对照 tag "锁屏对照通知"   # 判断机型前提
+```
