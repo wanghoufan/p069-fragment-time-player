@@ -32,7 +32,7 @@
 - 当前状态：**LOCAL_TESTED**（0.2.10 为待验收候选；不可写 READY/RELEASED/ACCEPTED）
 - P0 阻断：构建来源/同号不同包/设备锁/首装/AC-08 轮次已清零；剩余 勿扰与 OEM 省电、自动下一节、无音轨提示、锁屏首屏可见（两台机均不渲染第三方通知）、用户签收
 - 本轮已完成：单测 79/79；0.2.10 干净构建 + 台账登记；通知改 Alerting；AC-08 **30/30**（前台 0.452s / 后台 0.274s / 锁屏 0.336s 平均，最大 0.51s）；Note 11T Pro+ 首装（拒绝分支可用、授权后通知恢复）+ 备份恢复 13 课程；双机锁屏对照实验证明两台机都不渲染第三方锁屏通知
-- 279 项最终 PASS 80 / PARTIAL 45 / FAIL 2 / BLOCKED 10 / NOT_RUN 9（适用 146；P0 适用 108，PASS 61 / PARTIAL 34 / FAIL 2 / BLOCKED 10 / NOT_RUN 1）
+- 279 项最终 **PASS 83 / PARTIAL 42 / FAIL 2 / BLOCKED 10 / NOT_RUN 9**（适用 146；P0 适用 108，PASS 64 / PARTIAL 31 / FAIL 2 / BLOCKED 10 / NOT_RUN 1）
 - 证据：`docs/qa/evidence-2026-11-14-regression/`（0.2.10 段见 `0.2.10/README.md`）；原始 dumpsys 与截图在 `.local/qa-0.2.10b/`（本地，不入库）
 
 ## §2 下一步
