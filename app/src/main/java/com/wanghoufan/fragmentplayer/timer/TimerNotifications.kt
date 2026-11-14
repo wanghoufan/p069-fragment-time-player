@@ -7,6 +7,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -23,10 +25,14 @@ import java.util.Locale
 object TimerNotifications {
 
     /**
-     * 到点提醒渠道固定静音：铃声已改由 [TimerAlertSound] 用 MediaPlayer 走 USAGE_ALARM 独立播放。
-     * 渠道声音创建后不可修改，所以换新 id，并清掉旧的带铃声渠道，避免两路声音叠加。
+     * 到点提醒渠道带一段 0.1 秒静音音频：通知本身走 [TimerAlertSound] 播真实铃声，
+     * 但系统按「通知有没有声音」把提醒分到 Alerting / Silent 分区；静音通知会被归入
+     * Silent，Android 11+ 锁屏首屏不展示。挂一个静音音频只为让系统判为有声，
+     * 实际听感仍是应用按用户开关播放的铃声，不会叠音也不会改变「关闭响铃」语义。
+     * 渠道属性创建后不可修改，所以换新 id 并清掉旧渠道。
      */
-    const val CHANNEL_ALERT = "timer_alert_v2"
+    const val CHANNEL_ALERT = "timer_alert_v3"
+    private const val CHANNEL_ALERT_LEGACY_V2 = "timer_alert_v2"
     private const val CHANNEL_ALERT_LEGACY = "timer_alert"
     const val CHANNEL_RUNNING = "timer_running"
 
@@ -41,14 +47,19 @@ object TimerNotifications {
 
     fun ensureChannels(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
+        val silence = Uri.parse("android.resource://${context.packageName}/${R.raw.silence_alert}")
+        val alarmAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
         val alert = NotificationChannel(
             CHANNEL_ALERT,
             context.getString(R.string.timer_channel_alert_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = context.getString(R.string.timer_channel_alert_description)
-            // 声音与震动都由应用按用户开关单独执行，渠道自身静音，避免叠音、双震。
-            setSound(null, null)
+            // 静音音频只为让系统把通知归入 Alerting 分区；真实铃声与震动仍由应用按开关执行。
+            setSound(silence, alarmAttributes)
             enableVibration(false)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
@@ -66,6 +77,7 @@ object TimerNotifications {
         runCatching {
             manager.createNotificationChannel(alert)
             manager.createNotificationChannel(running)
+            manager.deleteNotificationChannel(CHANNEL_ALERT_LEGACY_V2)
             manager.deleteNotificationChannel(CHANNEL_ALERT_LEGACY)
         }
     }
@@ -108,8 +120,10 @@ object TimerNotifications {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
-            // 声音已与通知解耦：通知恒定静音，关闭铃声时仍然发通知，不能让用户完全收不到提醒。
-            .setSilent(true)
+            // 不能标 silent：否则系统把通知归入 Silent 分区，锁屏首屏不展示。
+            // 实际铃声仍由下面的 TimerAlertSound 按用户开关播放，渠道声音是 0.1s 静音。
+            .setSilent(false)
+            .setOnlyAlertOnce(true)
             .build()
         runCatching { manager.notify(ALERT_NOTIFICATION_ID, notification) }
 
