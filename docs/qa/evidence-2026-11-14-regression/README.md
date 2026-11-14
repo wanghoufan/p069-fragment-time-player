@@ -54,8 +54,8 @@
 
 ## 3. 未测 / 阻塞
 
-- 真实课程导入、MP3/视频播放、断点续播、自动下一节、无音轨提示、锁屏有声播放：接手轮逐台只读核查，四台在连设备 `/sdcard`（maxdepth 3）均未找到 mp3/mp4；Note 11T Pro 的 App 库 courses=0、sessions=0。真实素材位置需用户指定；未用合成素材冒充。
-- 首次安装：本机已装 0.2.8，卸载重装会丢 21 条历史；未执行。
+- 真实课程：**已在 0.2.9 轮补测**（目标机 `/sdcard/Movies/第一章家庭与朋友/` 13 节 MP3，见 §5）。仍未测：自动下一节、无音轨提示、真实 SAF 撤回。
+- 首次安装：本机已装 0.2.9，卸载重装会丢 2 场景/13 课程/12 会话；未执行。
 - 跨机型复测：接手轮只在 Note 11T Pro+（Android 15）补首屏/安全区/返回键；OPPO 被 `codex` profile 占用；Note 11T Pro 仍装 0.2.7(18)，未覆盖升级。
 - AC08 每状态 10 轮：本轮只做前台/锁屏/后台各 1 轮，不能折算为 10 轮。
 - 勿扰、OEM 省电、精确闹钟授权后复测、系统真实撤回 SAF 授权：未测。
@@ -67,5 +67,26 @@
 - `stay_on_while_plugged_in` 已复原为 `0`；`screen_off_timeout` 原值 `600000` 未改。
 - `reverse` 为空；`forward` 中 OPPO 的两条映射非本轮创建，未动。
 - 设备无 `.test` 包；应用无活动会话；主题恢复跟随系统；新增测试场景已删除。
-- 设备锁 `codearts-069` **未释放**：实测仍绑定 model `23054RA19C`（label 错写「Redmi Note 12T Pro」）。下次使用前按 `status → resolve → adb -s`；需要归还时由用户或后续会话执行 `release --profile codearts-069`，并先按真实型号重绑标签。
+- 设备锁 `codearts-069` **未释放**：13:29 已从错标重绑为 `Redmi Note 11T Pro+`（23054RA19C），未碰 `codex` 的 OPPO。下次使用前按 `status → resolve → adb -s`；需要归还时执行 `release --profile codearts-069`。
 - 测试新增的 6 条历史保留在应用库中（id=18–21 实测，另 2 条手动结束未记入/未入表），未删用户数据。
+
+## 5. 0.2.9 修复复测（2026-11-14 13:31–13:40）
+
+> 设备：Redmi Note 11T Pro+（23054RA19C，Android 15）。包：0.2.9(22)，SHA-256 `4a05ddc0…3359`，构建 commit `5cf5842`。证据在项目 `.local/qa-0.2.9/`（本地，不入库）。
+
+| 项 | 证据 | 结果 |
+|---|---|---|
+| 覆盖安装 | `install -r` Success；`dumpsys package` 0.2.9(22)/lastUpdate 13:31:52 | PASS |
+| 数据保留 | 装前/装后 2 场景 / 13 课程 / 10→12 会话（新增 2 轮测试）；checkpoint 保留 | PASS |
+| 真实课程播放 | media_session PLAYING，`6.照顾宠物（上）.mp3`，从 149,238ms 续播 | PASS |
+| 锁屏有声 | `mWakefulness=Asleep` 下仍 PLAYING，274,463→289,599ms | PASS |
+| 到点完成 | 120s；通知 6901 importance=4 category=alarm；完成页「本次 2 分钟」 | PASS |
+| 完成页返回 | BACK 一次回 IDLE 首页 | PASS |
+| 设置页返回 | 设置 Tab → BACK → 回计时首页 | PASS |
+| 提前结束 | 单对话框「记入历史？」；记入后 id=12 listened=163 completed=0 | PASS |
+| 断点保存 | checkpoint courseId=6 positionMs=428,810 | PASS |
+| 完成页文案（有课程） | 「到点完成，课程进度已保存」 | PASS |
+| 完成页文案（无课程） | 仅代码路径验证 | PARTIAL |
+| 单测 | 15 类 79/79，0 失败 | PASS |
+
+**复核事实**：目标机勿扰已开启、通知权限四项全关；到点通知在系统记录中存在但用户侧不可见，不作为「到点可见」正向证据。按截图目测点暂停偏差约 146px，改按 dump bounds 后命中——自动化点击必须用 dump 坐标。

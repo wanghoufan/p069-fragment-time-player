@@ -26,7 +26,7 @@
 
 完整逐项结果：`docs/qa/regression-matrix-2026-11-14.csv`（279 行，含适用性、状态、理由、证据指针）。
 
-> 下表是**首轮填写结果**，保留作对照；接手轮逐项纠偏并补做 G-008/G-009 后，真实统计见 §10.5（适用 146 / N/A 133；PASS 68 / PARTIAL 45 / FAIL 14 / BLOCKED 10 / NOT_RUN 9）。
+> 下表是**首轮填写结果**，保留作对照；接手轮逐项纠偏后为 PASS 68 / PARTIAL 45 / FAIL 14 / BLOCKED 10 / NOT_RUN 9；0.2.9 修复后最终为 **PASS 80 / PARTIAL 45 / FAIL 2 / BLOCKED 10 / NOT_RUN 9**（适用 146 / N/A 133，见 §11.5）。
 
 | 适用性 | 数量 | 说明 |
 |---|---|---|
@@ -66,6 +66,7 @@ V1.1 未明确覆盖、但本项目真实复发或仍在的风险：
 
 - 首轮填写：P0 适用 108 项：PASS 60、PARTIAL 25、BLOCKED 10、FAIL 10、NOT_RUN 3。
 - 接手轮纠偏后：P0 适用 108 项：PASS 51、PARTIAL 34、BLOCKED 10、FAIL 12、NOT_RUN 1（见 §10.5）。
+- 0.2.9 修复后：P0 适用 108 项：PASS 61、PARTIAL 34、BLOCKED 10、FAIL 2、NOT_RUN 1（见 §11.5）。
 - 未通过 P0 的集中原因：真实课程/播放链（BLOCKED）、交付证据链（FAIL）、AC08 轮次不足（PARTIAL）。
 - 详细逐项见 CSV；本报告只展开会阻断交付的项。
 
@@ -318,9 +319,75 @@ UI 取证：计时页 `uiautomator dump` 多次返回 `could not get idle state`
 - `logs/unit-test-summary.txt`（14 类 76 条，0 失败，来源 test-results XML）
 - `logs/gate-probe-2026-11-14.txt`
 
-### 10.7 仍未闭环
+### 10.7 仍未闭环（0.2.9 前）
 
-- 返回键、完成页文案、`SettingsRepositoryImpl.write` 静默吞异常：均需随 vc22 构建与真机复测。
-- 真实课程链：四机均无素材，维持 BLOCKED。
+- 返回键、完成页文案、`SettingsRepositoryImpl.write` 静默吞异常：均已在 0.2.9 修复（见 §11）。
+- 真实课程链：**接手轮一度误判为「四机均无素材」**；实际目标机 `/sdcard/Movies/第一章家庭与朋友/` 有 13 节 MP3，App 库 13 条，已在 §11.3 补测播放/断点/锁屏有声。
 - 首装、双机恢复、AC08 每状态 10 轮、勿扰/OEM 省电：维持未测。
-- commit / push / bump：需用户明确授权，本轮未做。
+- commit / push / bump：A1/B1 已获授权执行到本地 commit 与登记，**push 未做**。
+
+## 11. 0.2.9 修复与真机复测（2026-11-14 13:31–13:40）
+
+### 11.1 修复内容
+
+| 问题 | 改动 | 文件 |
+|---|---|---|
+| 返回键无页面栈（P1） | 新增 `resolveBackAction`：非计时 Tab 先回计时页，完成页回 IDLE，其余交给首页双击退出 | `ui/BackNavigation.kt`、`ui/FragmentTimeRoot.kt`、`ui/BackNavigationTest.kt` |
+| 完成页文案（P2） | `countdownOnly` 时显示「到点完成」，有课程时才显示「课程进度已保存」 | `ui/screens/TimerScreen.kt`、`strings_timer_ui.xml` |
+| 设置写入静默失败（P2） | `write` 返回 Boolean 并写 `Log.e`；失败时设置页 Snackbar 提示「设置保存失败，请重试」 | `SettingsRepositoryImpl.kt`、`Repositories.kt`、`CoursesSettingsViewModel.kt`、`strings_settings_ui.xml` |
+
+提交顺序（保证功能提交早于构建）：`4313599` docs → `5cf5842` fix（含 bump 0.2.9(22)）。
+
+### 11.2 构建与登记
+
+| 项 | 值 |
+|---|---|
+| versionName / versionCode | 0.2.9 / 22 |
+| 构建 commit | `5cf5842abc16db37ccdb43248ba6cae529338fba` |
+| 工作区 | 构建前干净（`git status` 空） |
+| APK | `app/build/outputs/apk/debug/app-debug.apk`，17,927,397 B |
+| SHA-256 | `4a05ddc00c5d2513fe3e4e4092e625d658183786aa8891c55683db4759593359` |
+| 登记 | 软件台账 §H 2026-11-14 13:35:16；`VERSION.md` 已由脚本重写 |
+| 单测 | 15 类 **79/79**，0 失败 0 错误 0 跳过 |
+
+### 11.3 真机复测（Redmi Note 11T Pro+ / Android 15）
+
+| 项 | 证据 | 结果 |
+|---|---|---|
+| 覆盖安装 0.2.8→0.2.9 | `install -r` Success；`dumpsys package` 0.2.9(22)，lastUpdateTime 13:31:52 | PASS |
+| 数据保留 | 装前 2 场景 / 13 课程 / 10 会话 → 装后同值，checkpoint 1 条 | PASS |
+| 真实课程播放 | `media_session` PLAYING，`6.照顾宠物（上）.mp3`，从断点 149,238ms 续播 | PASS |
+| 到点完成 | 120s 到点；通知 6901 importance=4 category=alarm；完成页「本次 2 分钟」 | PASS |
+| 完成页返回键 | BACK 一次回到 IDLE 首页（`06-back-to-idle`） | PASS（修复生效） |
+| 设置页返回键 | 设置 Tab → BACK → 回计时首页（`02/03`） | PASS（修复生效） |
+| 锁屏有声 | `mWakefulness=Asleep`，仍 PLAYING，position 274,463→289,599 | PASS |
+| 提前结束 | 只弹「记入历史？」，选记入后回 IDLE；会话 id=12 listened=163 completed=0 | PASS |
+| 断点保存 | checkpoint courseId=6 positionMs=428,810（07:08） | PASS |
+| 完成页文案（有课程） | 「到点完成，课程进度已保存」 | PASS |
+| 完成页文案（无课程） | 仅代码路径验证（countdownOnly 分支）；未在无课程场景真机复现 | PARTIAL |
+
+### 11.4 复核中的新事实与纠错
+
+1. **真实课程素材就在目标机**：`/sdcard/Movies/第一章家庭与朋友/` 13 节 MP3，App 库 13 条、全部有音轨。上一轮与接手轮早段「无素材」的判断来自对其他机型的错误盘点（`21091116AC` 才是 0 课程），已纠正。
+2. **目标机处于勿扰模式**：锁屏显示「勿扰已开启，来电和通知不再提醒」；通知权限四项仍全关。到点通知 6901 在系统记录中存在，但用户侧不可见，本机不能用于「到点可见」正向验收。
+3. **自动化坐标必须用 dump bounds**：按截图目测点「暂停计时」偏差约 146px，落到倒计时数字区，导致首测「暂停无效」；改用 dump bounds（y≈742）后一次命中。此坑与上一轮「暂停坐标偏差」同源。
+
+### 11.5 状态更新
+
+矩阵 `regression-matrix-2026-11-14.csv` 实算：
+
+| 口径 | PASS | PARTIAL | FAIL | BLOCKED | NOT_RUN | N/A |
+|---|---|---|---|---|---|---|
+| 首轮填写 | 77 | 36 | 10 | 10 | 14 | 132 |
+| 接手纠偏 | 68 | 45 | 14 | 10 | 9 | 133 |
+| 0.2.9 修复后 | **80** | **45** | **2** | **10** | **9** | **133** |
+
+P0（适用 108）：PASS 61、PARTIAL 34、FAIL 2、BLOCKED 10、NOT_RUN 1。
+剩余 FAIL 仅 `R-005`（关键 AC 未全绿）与 `R-025`（未达「相对完善可交付」）。
+门禁专项 8 条：构建来源 3 条由 FAIL 转 PASS；同号不同包 PASS；六态 PARTIAL（远端未推）；dirty 阻断仍 PARTIAL。
+
+### 11.6 交付判断
+
+- 构建来源、包身份、设备锁、返回键四项已闭环，证据可复跑。
+- 仍不能写 `READY_FOR_USER_ACCEPTANCE`：AC-08 每状态 10 轮未达、首装未做、无音轨提示未测、用户未签收。
+- 当前状态仍为 `LOCAL_TESTED`；0.2.9 可作为「待用户验收候选包」，但不得称已验收。

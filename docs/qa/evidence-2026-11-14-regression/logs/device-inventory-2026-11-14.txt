@@ -13,5 +13,7 @@ P069 设备盘点｜2026-11-14 13:14 +08:00
 1. 「四台均已装 0.2.8(21)」不成立：21091116AC（Note 11T Pro）实际为 0.2.7(18)。
 2. 上一轮报告称测试机为 Redmi Note 12 Pro（22101316C，Android 14），与该机实测系统版本一致。
 3. 本轮接手复核在 Redmi Note 11T Pro+（23054RA19C，Android 15）上补测首屏、返回键与通知权限。
-4. 四台设备 /sdcard（maxdepth 3）均未发现 mp3/mp4 素材；Note 11T Pro 上 P069 的 courses=0、sessions=0。
-   真实课程播放链仍为 BLOCKED，未用合成素材替代。
+4. **纠错**：13:14 的 find（maxdepth 3）未列出素材，但目标机 `/sdcard/Movies/第一章家庭与朋友/` 实际有 13 个 MP3；
+   Note 11T Pro+ 的 App 库 courses=13、全部有音轨，13:33 起可正常播放。`21091116AC`（Note 11T Pro）才是 courses=0。
+   早段「四台无素材、真实课程链 BLOCKED」的结论已作废。
+5. 0.2.9(22) 已覆盖安装到 23054RA19C（lastUpdateTime 2026-11-14 13:31:52），数据 2 场景/13 课程/10 会话保留。
